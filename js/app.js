@@ -728,9 +728,25 @@ function onWrong(element, hour, minute) {
 
     let correctMsg = '';
     if (state.currentQuestion.type === 'digital-to-analog') {
+      // Mod 1: Kollar otomatik doğru saate çevrilir
       correctMsg = `Hedef dakika: ${state.currentQuestion.minute}. Kollar düzeltildi!`;
       setClock(state.currentQuestion.hour, state.currentQuestion.minute, true);
+    } else if (state.currentQuestion.type === 'analog-to-digital') {
+      // Mod 2 (Analogdan Dijitale): Çarklar dönerek doğru cevabı göstersin!
+      const targetH = state.currentQuestion.hour;
+      const targetMIndex = Math.floor(state.currentQuestion.minute / 5);
+      state.wheelHour = targetH;
+      state.wheelMinute = state.currentQuestion.minute;
+
+      // Çarkları kaydırarak doğru pozisyona getir
+      scrollWheelTo(DOM.hourWheelTrack, targetH);
+      scrollWheelTo(DOM.minuteWheelTrack, targetMIndex);
+
+      const hFormatted = String(targetH).padStart(2, '0');
+      const mFormatted = String(state.currentQuestion.minute).padStart(2, '0');
+      correctMsg = `Doğru dijital saat: ${hFormatted}:${mFormatted} ✨`;
     } else {
+      // Mod 3 (Konuşma Dili): Doğru şık işaretlenir
       const correct = timeEngine.timeToTurkish(hour, minute);
       correctMsg = `Doğru okunuş: "${correct}" ✨`;
       highlightCorrectChoice(correct);
