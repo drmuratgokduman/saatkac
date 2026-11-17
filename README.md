@@ -16,6 +16,6 @@
 - 🎡 iOS tarzı dönen tekerlek (Wheel Picker)
 - 🌅 Dinamik gökyüzü (sabah/öğle/akşam/gece)
 - 🏆 Oyunlaştırma ve ödül sistemi
-- 🎁 5–100 doğru arasında açılan 15 sahne ödülü; 50 ve 100 doğru büyük kale yükseltmeleri
+- 🎁 5–45 bahçe ödülleri; 50 doğru şato aşamasına geçiş, ardından 60–100 arasında her 10 doğruda şato ödülü
 - 🔊 Web Audio API ile ses efektleri
 - 🔄 Puan ve ödüller yalnızca açık oturumda tutulur; sayfa yenilenince sıfırlanır

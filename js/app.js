@@ -323,20 +323,31 @@ function setupInteractiveClock() {
     if (!isDragging) return;
     const deg = getAngleFromEvent(e);
 
-    // Yelkovanı 5 dakikalık aralıklara oturt ve saat döngüsünü akrebe yansıt.
+    // Yelkovanı 5 dakikalık aralıklara oturt; 12'yi geçişi saat değişimiyle aynı anda işle.
     const previousAngle = lastAngle;
+    const previousMinute = state.userHandMinute;
     let angleDelta = deg - previousAngle;
     if (angleDelta > 180) angleDelta -= 360;
     if (angleDelta < -180) angleDelta += 360;
-    if (previousAngle > 330 && deg < 30 && angleDelta > 0) {
+    const minuteVal = (Math.round(deg / 30) % 12) * 5;
+    if (angleDelta === 0 && minuteVal !== previousMinute) {
+      let minuteDelta = minuteVal - previousMinute;
+      if (minuteDelta > 30) minuteDelta -= 60;
+      if (minuteDelta < -30) minuteDelta += 60;
+      angleDelta = minuteDelta * 6;
+    }
+    let hourChanged = false;
+
+    if (angleDelta > 0 && previousMinute >= 50 && minuteVal <= 5) {
       state.userHandHour = (state.userHandHour + 1) % 24;
-    } else if (previousAngle < 30 && deg > 330 && angleDelta < 0) {
+      hourChanged = true;
+    } else if (angleDelta < 0 && previousMinute <= 5 && minuteVal >= 50) {
       state.userHandHour = (state.userHandHour + 23) % 24;
+      hourChanged = true;
     }
     lastAngle = deg;
-    const minuteVal = (Math.round(deg / 30) % 12) * 5;
 
-    if (minuteVal !== state.userHandMinute) {
+    if (minuteVal !== state.userHandMinute || hourChanged) {
       state.userHandMinute = minuteVal;
       setClock(state.userHandHour, state.userHandMinute, false);
       audioEngine.playTick();
@@ -870,7 +881,7 @@ const REWARD_STEPS = [
   { total: 25, icon: '🌈' }, { total: 30, icon: '🐦' },
   { total: 35, icon: '🌷' }, { total: 40, icon: '🐸' },
   { total: 45, icon: '🦋' }, { total: 50, icon: '🏰' },
-  { total: 60, icon: '🌉' }, { total: 70, icon: '🌹' },
+  { total: 60, icon: '🌉' }, { total: 70, icon: '🎏' },
   { total: 80, icon: '🐉' }, { total: 90, icon: '🎆' },
   { total: 100, icon: '👑' },
 ];
@@ -915,17 +926,17 @@ function checkGamificationRewards() {
     [35, 'flowers', DOM.rewardFlowers, '🌷 Bahçende rengârenk çiçekler açtı!'],
     [40, 'pond', DOM.rewardPond, '🐸 Kurbağalı göletin hazır!'],
     [45, 'butterfly', DOM.rewardButterfly, '🦋 Bahçene bir kelebek geldi!'],
-    [50, 'castle', DOM.rewardCastle, '🏰 Evin görkemli bir kaleye dönüştü!'],
-    [60, 'moat', DOM.rewardMoat, '🌉 Kalenin çevresine su hendeği ve köprü eklendi!'],
-    [70, 'garden', DOM.rewardGarden, '🌹 Kaleye kraliyet bahçesi eklendi!'],
-    [80, 'dragon', DOM.rewardDragon, '🐉 Dost canlısı ejderha kaleni koruyor!'],
-    [90, 'fireworks', DOM.rewardFireworks, '🎆 Kalende kutlama başladı!'],
+    [50, 'castle', DOM.rewardCastle, '🏰 Masal evin şatoya dönüştü! Yeni şato aşaman başladı!'],
+    [60, 'moat', DOM.rewardMoat, '🌉 Şatonun çevresine su hendeği ve köprü eklendi!'],
+    [70, 'garden', DOM.rewardGarden, '🎏 Şatonun bahçesine kraliyet sancakları ve çiçekler geldi!'],
+    [80, 'dragon', DOM.rewardDragon, '🐉 Şatonu dost canlısı bir ejderha koruyor!'],
+    [90, 'fireworks', DOM.rewardFireworks, '🎆 Şatonda büyük bir kutlama başladı!'],
   ];
 
   rewards.forEach(([threshold, key, element, message]) => {
     if (tc < threshold || state.rewards[key]) return;
     state.rewards[key] = true;
-    if (key === 'castle') DOM.house.style.opacity = '0';
+    if (key === 'castle') DOM.app.classList.add('chateau-world');
     unlockReward(element, message);
   });
 
@@ -933,7 +944,7 @@ function checkGamificationRewards() {
     state.rewards.grandCastle = true;
     DOM.rewardCastle.classList.remove('unlocked');
     DOM.rewardCastle.setAttribute('opacity', '0');
-    unlockReward(DOM.rewardGrandCastle, '👑 100 doğru! Kaleni büyük sancaklı bir saraya yükselttin!');
+    unlockReward(DOM.rewardGrandCastle, '👑 100 doğru! Daha büyük ve sancaklı şaton açıldı!');
   }
 }
 

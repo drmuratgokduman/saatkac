@@ -1150,10 +1150,47 @@ body[data-time-period="night"] .digital-clock-display {
 
 .reward-item.unlocked { opacity: 1 !important; }
 #reward-balloon.unlocked { animation: balloonSoar 6s infinite ease-in-out; }
-@keyframes balloonSoar { 0%, 100% { transform: translate(340px, 55px); } 50% { transform: translate(335px, 45px); } }
+@keyframes balloonSoar { 0%, 100% { transform: translate(370px, 58px); } 50% { transform: translate(365px, 48px); } }
 #house { transition: opacity 0.7s ease; }
 .castle-flags { transform-box: fill-box; transform-origin: bottom center; animation: flagsWave 1.5s ease-in-out infinite alternate; }
+.chateau-pennants { transform-box: fill-box; transform-origin: left center; animation: flagsWave 1.5s ease-in-out infinite alternate; }
 @keyframes flagsWave { from { transform: skewY(-3deg); } to { transform: skewY(4deg); } }
+
+/* 50 doğru sonrası bahçe aşamasından sade şato dünyasına geçiş */
+#app.chateau-world {
+  --sky-1: #A5B4FC;
+  --sky-2: #FDE68A;
+  --mountain-top: #C4B5FD;
+  --mountain-base: #7C3AED;
+  --hill-1: #A3E635;
+  --hill-2: #15803D;
+  --pine-1: #14532D;
+  --pine-2: #166534;
+  --pine-3: #22C55E;
+}
+
+body[data-time-period="night"] #app.chateau-world {
+  --sky-1: #111827;
+  --sky-2: #312E81;
+  --mountain-top: #312E81;
+  --mountain-base: #1E1B4B;
+  --hill-1: #334155;
+  --hill-2: #0F172A;
+  --pine-1: #090D16;
+  --pine-2: #1E293B;
+  --pine-3: #334155;
+}
+
+#app.chateau-world #house { opacity: 0 !important; pointer-events: none; }
+#app.chateau-world #reward-tree,
+#app.chateau-world #chimney-smoke,
+#app.chateau-world #reward-balloon,
+#app.chateau-world #reward-doghouse,
+#app.chateau-world #reward-rainbow,
+#app.chateau-world #reward-birds,
+#app.chateau-world #reward-flowers,
+#app.chateau-world #reward-pond,
+#app.chateau-world #reward-butterfly { display: none !important; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
