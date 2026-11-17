@@ -2,258 +2,388 @@
 <html lang="tr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="description" content="Zaman Kaşifi — Çocuklar için analog saat öğrenme uygulaması">
-  <meta name="theme-color" content="#87CEEB">
-  <title>Zaman Kaşifi ⏰</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="description" content="Zaman Kaşifi — Çocuklar için interaktif ve eğlenceli analog saat öğrenme oyunu">
+  <meta name="theme-color" content="#4FC3F7">
+  <title>Zaman Kaşifi ⏰ Macera Başlıyor!</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div id="app">
+  <div id="app" class="game-wrapper" data-time-period="morning">
 
-    <!-- ===== ÜST BÖLÜM: Gökyüzü + Ev Sahnesi ===== -->
-    <section id="scene-container" aria-label="Dinamik gökyüzü ve ev sahnesi">
-      <svg id="scene" viewBox="0 0 400 260" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Gökyüzü sahnesi">
-
-        <!-- Gökyüzü Gradyanı -->
-        <defs>
-          <linearGradient id="skyGradient" x1="0" y1="0" x2="0" y2="1">
-            <stop id="skyTop" offset="0%" stop-color="var(--sky-top)" />
-            <stop id="skyBottom" offset="100%" stop-color="var(--sky-bottom)" />
-          </linearGradient>
-          <!-- Güneş ışın efekti -->
-          <radialGradient id="sunGlow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stop-color="rgba(255,220,100,0.6)" />
-            <stop offset="100%" stop-color="rgba(255,220,100,0)" />
-          </radialGradient>
-        </defs>
-
-        <!-- Gökyüzü -->
-        <rect id="sky" x="0" y="0" width="400" height="260" fill="url(#skyGradient)" />
-
-        <!-- Yıldızlar (gece görünür) -->
-        <g id="stars" class="scene-element" opacity="0">
-          <circle cx="30" cy="25" r="1.5" fill="#FFF" />
-          <circle cx="80" cy="45" r="1" fill="#FFF" />
-          <circle cx="140" cy="20" r="1.8" fill="#FFF" />
-          <circle cx="200" cy="50" r="1.2" fill="#FFF" />
-          <circle cx="260" cy="15" r="1.5" fill="#FFF" />
-          <circle cx="310" cy="40" r="1" fill="#FFF" />
-          <circle cx="350" cy="30" r="1.8" fill="#FFF" />
-          <circle cx="55" cy="60" r="1" fill="#FFF" />
-          <circle cx="175" cy="35" r="1.3" fill="#FFF" />
-          <circle cx="380" cy="55" r="1.2" fill="#FFF" />
-          <circle cx="100" cy="10" r="1.4" fill="#FFF" />
-          <circle cx="330" cy="12" r="1.1" fill="#FFF" />
-        </g>
-
-        <!-- Güneş -->
-        <g id="sun" class="scene-element scene-clickable" transform="translate(80, 60)" style="cursor:pointer">
-          <circle class="sun-glow" cx="0" cy="0" r="40" fill="url(#sunGlow)" />
-          <circle class="sun-body" cx="0" cy="0" r="20" fill="#FFD93D" />
-          <!-- Güneş yüzü (streak 5'te aktif) -->
-          <g id="sun-face" opacity="0">
-            <circle cx="-6" cy="-4" r="2.5" fill="#E8871E" /> <!-- Sol göz -->
-            <circle cx="6" cy="-4" r="2.5" fill="#E8871E" />  <!-- Sağ göz -->
-            <path d="M-8,4 Q0,12 8,4" fill="none" stroke="#E8871E" stroke-width="2" stroke-linecap="round" /> <!-- Gülümseme -->
-          </g>
-        </g>
-
-        <!-- Ay -->
-        <g id="moon" class="scene-element scene-clickable" transform="translate(320, 50)" opacity="0" style="cursor:pointer">
-          <circle cx="0" cy="0" r="18" fill="#F5F5DC" />
-          <circle cx="6" cy="-4" r="14" fill="var(--sky-top)" /> <!-- Hilal efekti -->
-          <!-- Ay yüzü (streak 5'te aktif) -->
-          <g id="moon-face" opacity="0">
-            <circle cx="-6" cy="-2" r="2" fill="#B0A070" />
-            <circle cx="2" cy="-4" r="2" fill="#B0A070" />
-            <path d="M-8,4 Q-3,9 2,4" fill="none" stroke="#B0A070" stroke-width="1.5" stroke-linecap="round" />
-          </g>
-        </g>
-
-        <!-- Bulutlar -->
-        <g id="clouds" class="scene-element scene-clickable" style="cursor:pointer">
-          <g class="cloud cloud-1" transform="translate(60, 70)">
-            <ellipse cx="0" cy="0" rx="25" ry="12" fill="rgba(255,255,255,0.85)" />
-            <ellipse cx="18" cy="-2" rx="18" ry="10" fill="rgba(255,255,255,0.85)" />
-            <ellipse cx="-14" cy="2" rx="16" ry="9" fill="rgba(255,255,255,0.85)" />
-          </g>
-          <g class="cloud cloud-2" transform="translate(300, 85)">
-            <ellipse cx="0" cy="0" rx="22" ry="10" fill="rgba(255,255,255,0.75)" />
-            <ellipse cx="15" cy="-3" rx="16" ry="8" fill="rgba(255,255,255,0.75)" />
-            <ellipse cx="-12" cy="1" rx="14" ry="8" fill="rgba(255,255,255,0.75)" />
-          </g>
-        </g>
-
-        <!-- Zemin / Çimen -->
-        <ellipse cx="200" cy="260" rx="220" ry="50" fill="var(--ground-color)" />
-        <rect x="0" y="230" width="400" height="30" fill="var(--ground-color)" />
-
-        <!-- Ev -->
-        <g id="house" class="scene-clickable" transform="translate(200, 155)" style="cursor:pointer">
-          <!-- Ev gövdesi -->
-          <rect x="-45" y="0" width="90" height="70" rx="3" fill="var(--house-wall)" />
-          <!-- Çatı -->
-          <polygon points="-55,-5 0,-45 55,-5" fill="var(--house-roof)" />
-          <!-- Baca -->
-          <rect x="20" y="-38" width="14" height="25" rx="2" fill="#8B7355" />
-          <!-- Baca dumanı (10 doğruda aktif) -->
-          <g id="chimney-smoke" opacity="0">
-            <circle class="smoke smoke-1" cx="27" cy="-45" r="4" fill="rgba(200,200,200,0.6)" />
-            <circle class="smoke smoke-2" cx="30" cy="-55" r="5" fill="rgba(200,200,200,0.4)" />
-            <circle class="smoke smoke-3" cx="25" cy="-65" r="6" fill="rgba(200,200,200,0.2)" />
-          </g>
-          <!-- Kapı -->
-          <rect x="-10" y="30" width="20" height="40" rx="10" fill="var(--house-door)" />
-          <circle cx="6" cy="52" r="2" fill="#FFD700" /> <!-- Kapı kolu -->
-          <!-- Pencereler -->
-          <g id="window-left">
-            <rect x="-38" y="12" width="22" height="20" rx="2" fill="var(--window-color)" stroke="#FFF" stroke-width="1.5" />
-            <line x1="-27" y1="12" x2="-27" y2="32" stroke="#FFF" stroke-width="1" />
-            <line x1="-38" y1="22" x2="-16" y2="22" stroke="#FFF" stroke-width="1" />
-          </g>
-          <g id="window-right">
-            <rect x="16" y="12" width="22" height="20" rx="2" fill="var(--window-color)" stroke="#FFF" stroke-width="1.5" />
-            <line x1="27" y1="12" x2="27" y2="32" stroke="#FFF" stroke-width="1" />
-            <line x1="16" y1="22" x2="38" y2="22" stroke="#FFF" stroke-width="1" />
-          </g>
-        </g>
-
-        <!-- === ÖDÜL ÖĞELERİ (başlangıçta gizli) === -->
-
-        <!-- 5 Doğru: Ağaç -->
-        <g id="reward-tree" class="reward-element" opacity="0" transform="translate(85, 195)">
-          <rect x="-4" y="0" width="8" height="30" rx="2" fill="#8B6914" />
-          <circle cx="0" cy="-8" r="20" fill="#4CAF50" />
-          <circle cx="-12" cy="0" r="14" fill="#66BB6A" />
-          <circle cx="12" cy="0" r="14" fill="#43A047" />
-        </g>
-
-        <!-- 15 Doğru: Sıcak Hava Balonu -->
-        <g id="reward-balloon" class="reward-element" opacity="0" transform="translate(340, 90)">
-          <ellipse cx="0" cy="-15" rx="14" ry="18" fill="#FF6B6B" />
-          <ellipse cx="0" cy="-15" rx="14" ry="18" fill="url(#balloonStripes)" opacity="0.3" />
-          <line x1="-5" y1="3" x2="-4" y2="12" stroke="#8B6914" stroke-width="1" />
-          <line x1="5" y1="3" x2="4" y2="12" stroke="#8B6914" stroke-width="1" />
-          <rect x="-5" y="12" width="10" height="7" rx="1" fill="#8B6914" />
-        </g>
-
-        <!-- 20 Doğru: Köpek Kulübesi -->
-        <g id="reward-doghouse" class="reward-element" opacity="0" transform="translate(310, 215)">
-          <rect x="-18" y="-5" width="36" height="28" rx="2" fill="#D2691E" />
-          <polygon points="-22,-5 0,-22 22,-5" fill="#A0522D" />
-          <ellipse cx="0" cy="10" rx="8" ry="11" fill="#3E2723" />
-          <!-- Köpek -->
-          <g transform="translate(-28, 5)">
-            <ellipse cx="0" cy="5" rx="8" ry="6" fill="#C49A6C" />
-            <circle cx="-3" cy="-2" r="5" fill="#C49A6C" />
-            <circle cx="-5" cy="-4" r="1.5" fill="#3E2723" /> <!-- Göz -->
-            <ellipse cx="-7" cy="-1" rx="2" ry="1.5" fill="#3E2723" /> <!-- Burun -->
-            <ellipse cx="3" cy="-7" rx="3" ry="5" fill="#A0714A" transform="rotate(15)" /> <!-- Kulak -->
-          </g>
-        </g>
-
-      </svg>
-    </section>
-
-    <!-- ===== ORTA BÖLÜM: Analog Saat ===== -->
-    <section id="clock-container" aria-label="Analog saat">
-      <div id="clock-wrapper">
-        <svg id="analog-clock" viewBox="0 0 200 200" role="img" aria-label="Analog saat kadranı">
-          <!-- Saat çerçevesi -->
-          <circle id="clock-frame" cx="100" cy="100" r="95" fill="white" stroke="var(--clock-border)" stroke-width="4" />
-          <circle cx="100" cy="100" r="90" fill="white" stroke="#E0E0E0" stroke-width="1" />
-
-          <!-- 5'er dakika çizgileri -->
-          <g id="minute-ticks" stroke="#AAA" stroke-width="1.5" stroke-linecap="round">
-            <!-- 60 çizgi, her 6 dereede, saat üzerindekiler daha kalın -->
-          </g>
-
-          <!-- 5'er dakika gizli sayılar (ipucu olarak gösterilir) -->
-          <g id="minute-labels" class="minute-hint-labels" opacity="0" font-size="7" fill="#999" text-anchor="middle" dominant-baseline="middle">
-          </g>
-
-          <!-- Saat sayıları (1-12) -->
-          <g id="hour-numbers" font-size="18" font-weight="700" fill="var(--clock-numbers)" text-anchor="middle" dominant-baseline="middle" font-family="'Nunito', sans-serif">
-          </g>
-
-          <!-- Akrep (saat kolu - kısa ve kalın) -->
-          <line id="hour-hand" x1="100" y1="100" x2="100" y2="45" stroke="var(--hand-hour)" stroke-width="5" stroke-linecap="round" />
-
-          <!-- Yelkovan (dakika kolu - uzun ve ince) -->
-          <line id="minute-hand" x1="100" y1="100" x2="100" y2="25" stroke="var(--hand-minute)" stroke-width="3" stroke-linecap="round" />
-
-          <!-- Merkez noktası -->
-          <circle cx="100" cy="100" r="5" fill="var(--hand-center)" />
-          <circle cx="100" cy="100" r="2" fill="white" />
-        </svg>
-      </div>
-    </section>
-
-    <!-- ===== ALT BÖLÜM: Soru ve Cevap Alanı ===== -->
-    <section id="question-container" aria-label="Soru alanı">
-
-      <!-- Üst bilgi çubuğu -->
-      <div id="stats-bar">
-        <div class="stat-item">
-          <span class="stat-icon">⭐</span>
-          <span id="total-correct" class="stat-value">0</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-icon">🔥</span>
-          <span id="current-streak" class="stat-value">0</span>
+    <!-- ===== OYUN ÜST PANELİ (Header & Stats) ===== -->
+    <header class="game-header">
+      <div class="logo-badge">
+        <span class="logo-icon">⏰</span>
+        <div class="logo-text">
+          <span class="app-title">ZAMAN KAŞİFİ</span>
+          <span class="app-subtitle">Saatleri Keşfet</span>
         </div>
       </div>
 
-      <!-- Hikaye metni -->
-      <p id="story-text" class="story-text" aria-live="polite"></p>
+      <div class="stats-group">
+        <!-- Yıldız / Puan Rozeti -->
+        <div class="stat-pill star-pill" title="Toplam Doğru">
+          <div class="pill-icon">⭐</div>
+          <span id="total-correct" class="pill-value">0</span>
+        </div>
 
-      <!-- Soru metni -->
-      <p id="question-text" class="question-text" aria-live="polite"></p>
+        <!-- Seri (Streak) Rozeti -->
+        <div class="stat-pill streak-pill" title="Arka Arkaya Doğru Serisi">
+          <div class="pill-icon fire-icon">🔥</div>
+          <span id="current-streak" class="pill-value">0</span>
+        </div>
 
-      <!-- Tip 1: Wheel Picker -->
-      <div id="wheel-picker-area" class="answer-area" style="display:none" role="group" aria-label="Saat ve dakika seçici">
-        <div class="wheel-picker-row">
-          <div class="wheel-column">
-            <label class="wheel-label">Saat</label>
-            <div class="wheel-viewport" id="hour-wheel-viewport">
-              <div class="wheel-highlight"></div>
-              <div class="wheel-track" id="hour-wheel-track" role="listbox" aria-label="Saat seçimi">
-                <!-- JS ile 00-23 doldurulacak -->
+        <!-- Ödül Hedefi İlerleme Çubuğu -->
+        <div class="reward-progress-box" title="Sonraki Ödüle Kalan">
+          <div class="reward-goal-icon" id="next-reward-icon">🌳</div>
+          <div class="progress-track">
+            <div id="reward-progress-bar" class="progress-fill" style="width: 0%"></div>
+          </div>
+          <span id="reward-progress-text" class="progress-text">0/5</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- ===== ANA OYUN ALANI (Masaüstünde 2 Sütun, Mobilde Akıcı Sıralama) ===== -->
+    <main class="game-main-content">
+
+      <!-- SOL / ÜST SÜTUN: Masalsı Sahne & Analog Saat -->
+      <section class="visual-stage-card">
+
+        <!-- DİNAMİK CANLI SVG SAHNE -->
+        <div class="scene-viewport" aria-label="Canlı masal dünyası">
+          <svg id="scene" viewBox="0 0 500 240" preserveAspectRatio="xMidYMid slice" role="img">
+            <defs>
+              <!-- Gökyüzü Renk Geçişleri -->
+              <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop id="skyStop1" offset="0%" stop-color="var(--sky-1)" />
+                <stop id="skyStop2" offset="100%" stop-color="var(--sky-2)" />
+              </linearGradient>
+
+              <!-- Güneş Parıltısı -->
+              <radialGradient id="sunAura" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="#FFE082" stop-opacity="1" />
+                <stop offset="60%" stop-color="#FFD54F" stop-opacity="0.5" />
+                <stop offset="100%" stop-color="#FFCA28" stop-opacity="0" />
+              </radialGradient>
+
+              <!-- Balon Çizgileri -->
+              <linearGradient id="balloonPattern" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#FF5252" />
+                <stop offset="33%" stop-color="#FFD740" />
+                <stop offset="66%" stop-color="#448AFF" />
+                <stop offset="100%" stop-color="#69F0AE" />
+              </linearGradient>
+
+              <!-- Yumuşak Tepe Gölgeleri -->
+              <linearGradient id="hillBackGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="var(--hill-back-1)" />
+                <stop offset="100%" stop-color="var(--hill-back-2)" />
+              </linearGradient>
+              <linearGradient id="hillFrontGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="var(--hill-front-1)" />
+                <stop offset="100%" stop-color="var(--hill-front-2)" />
+              </linearGradient>
+            </defs>
+
+            <!-- Gökyüzü Arka Planı -->
+            <rect width="500" height="240" fill="url(#skyGrad)" />
+
+            <!-- Yıldızlar ve Işıltılar (Gece aktif) -->
+            <g id="stars" class="scene-anim-stars" opacity="0">
+              <circle cx="45" cy="35" r="2" fill="#FFFDE7" />
+              <circle cx="85" cy="20" r="1.5" fill="#FFF9C4" />
+              <circle cx="130" cy="50" r="2.2" fill="#FFFDE7" />
+              <polygon points="175,25 177,30 182,31 178,34 179,39 175,36 171,39 172,34 168,31 173,30" fill="#FFF59D" />
+              <circle cx="215" cy="40" r="1.5" fill="#FFFDE7" />
+              <circle cx="280" cy="25" r="2" fill="#FFF" />
+              <polygon points="340,30 342,34 346,35 343,38 344,42 340,39 336,42 337,38 334,35 338,34" fill="#FFF59D" />
+              <circle cx="395" cy="45" r="1.8" fill="#FFFDE7" />
+              <circle cx="450" cy="25" r="2.2" fill="#FFF" />
+              <circle cx="475" cy="65" r="1.5" fill="#FFF9C4" />
+            </g>
+
+            <!-- Güneş (Etkileşimli & Sevimli Yüzlü) -->
+            <g id="sun" class="celestial-body interactive-element" transform="translate(100, 60)">
+              <circle class="sun-halo" cx="0" cy="0" r="46" fill="url(#sunAura)" />
+              <circle class="sun-core" cx="0" cy="0" r="24" fill="#FFC107" />
+              <!-- Güneş Sevimli Yüz -->
+              <g id="sun-face">
+                <circle cx="-7" cy="-4" r="2.5" fill="#D84315" />
+                <circle cx="7" cy="-4" r="2.5" fill="#D84315" />
+                <ellipse cx="-11" cy="2" rx="3" ry="1.5" fill="#FF8A65" opacity="0.8" />
+                <ellipse cx="11" cy="2" rx="3" ry="1.5" fill="#FF8A65" opacity="0.8" />
+                <path d="M-6,4 Q0,11 6,4" fill="none" stroke="#D84315" stroke-width="2.2" stroke-linecap="round" />
+              </g>
+            </g>
+
+            <!-- Ay (Hilal & Gece Arkadaşı) -->
+            <g id="moon" class="celestial-body interactive-element" transform="translate(380, 55)" opacity="0">
+              <circle cx="0" cy="0" r="22" fill="#FFF59D" />
+              <circle cx="8" cy="-5" r="18" fill="var(--sky-1)" />
+              <!-- Ay Sevimli Yüz -->
+              <g id="moon-face">
+                <circle cx="-5" cy="-2" r="2" fill="#9E9D24" />
+                <ellipse cx="-8" cy="4" rx="2.5" ry="1.2" fill="#F0F4C3" />
+                <path d="M-8,5 Q-3,10 2,5" fill="none" stroke="#9E9D24" stroke-width="1.8" stroke-linecap="round" />
+              </g>
+            </g>
+
+            <!-- Pofuduk Bulutlar -->
+            <g id="clouds" class="interactive-element">
+              <g class="cloud cloud-a" transform="translate(70, 75)">
+                <ellipse cx="0" cy="0" rx="30" ry="14" fill="#FFFFFF" opacity="0.95" />
+                <ellipse cx="20" cy="-4" rx="22" ry="12" fill="#FFFFFF" opacity="0.95" />
+                <ellipse cx="-18" cy="2" rx="18" ry="10" fill="#FFFFFF" opacity="0.95" />
+              </g>
+              <g class="cloud cloud-b" transform="translate(350, 90)">
+                <ellipse cx="0" cy="0" rx="26" ry="12" fill="#FFFFFF" opacity="0.88" />
+                <ellipse cx="16" cy="-3" rx="18" ry="10" fill="#FFFFFF" opacity="0.88" />
+                <ellipse cx="-14" cy="2" rx="16" ry="9" fill="#FFFFFF" opacity="0.88" />
+              </g>
+            </g>
+
+            <!-- Arka Tepeler -->
+            <path d="M-20,240 Q100,140 240,190 T520,180 L520,240 Z" fill="url(#hillBackGrad)" />
+
+            <!-- Ön Tepe ve Çayır -->
+            <path d="M-20,240 Q120,170 300,205 T520,210 L520,240 Z" fill="url(#hillFrontGrad)" />
+
+            <!-- Sevimli Masal Evi -->
+            <g id="house" class="interactive-element" transform="translate(240, 150)">
+              <!-- Baca -->
+              <rect x="22" y="-38" width="16" height="26" rx="3" fill="#8D6E63" />
+              <rect x="19" y="-42" width="22" height="6" rx="2" fill="#6D4C41" />
+              <!-- Baca Puf Dumanları (10 doğruda açılır) -->
+              <g id="chimney-smoke" class="smoke-puff-group" opacity="0">
+                <circle class="smoke-puff p1" cx="30" cy="-52" r="5" fill="#FFFFFF" opacity="0.7" />
+                <circle class="smoke-puff p2" cx="34" cy="-66" r="7" fill="#FFFFFF" opacity="0.5" />
+                <circle class="smoke-puff p3" cx="28" cy="-80" r="9" fill="#FFFFFF" opacity="0.3" />
+              </g>
+
+              <!-- Ev Gövdesi (Tatlı Kır Evi) -->
+              <rect x="-48" y="0" width="96" height="74" rx="6" fill="var(--house-body)" stroke="#5D4037" stroke-width="2" />
+              
+              <!-- Üçgen Ahşap Çatı -->
+              <polygon points="-58,-2 0,-44 58,-2" fill="var(--house-roof)" stroke="#3E2723" stroke-width="2" />
+              <!-- Çatı Çatı Süsü -->
+              <circle cx="0" cy="-20" r="7" fill="#FFECB3" stroke="#8D6E63" stroke-width="1.5" />
+
+              <!-- Yuvarlak Kemeri Olan Sevimli Kapı -->
+              <path d="M-12,74 L-12,46 Q0,32 12,46 L12,74 Z" fill="var(--house-door)" stroke="#4E342E" stroke-width="2" />
+              <circle cx="7" cy="56" r="2.5" fill="#FFD54F" />
+
+              <!-- Sol Pencere (Pancurlu ve Işıklı) -->
+              <g id="window-left" transform="translate(-36, 16)">
+                <rect x="0" y="0" width="22" height="22" rx="4" fill="var(--window-light)" stroke="#FFF" stroke-width="2" />
+                <line x1="11" y1="0" x2="11" y2="22" stroke="#FFF" stroke-width="1.5" />
+                <line x1="0" y1="11" x2="22" y2="11" stroke="#FFF" stroke-width="1.5" />
+              </g>
+
+              <!-- Sağ Pencere -->
+              <g id="window-right" transform="translate(14, 16)">
+                <rect x="0" y="0" width="22" height="22" rx="4" fill="var(--window-light)" stroke="#FFF" stroke-width="2" />
+                <line x1="11" y1="0" x2="11" y2="22" stroke="#FFF" stroke-width="1.5" />
+                <line x1="0" y1="11" x2="22" y2="11" stroke="#FFF" stroke-width="1.5" />
+              </g>
+            </g>
+
+            <!-- === AÇILABİLİR KALICI ÖDÜLLER === -->
+
+            <!-- 5 Doğru: Meyveli Sevimli Ağaç -->
+            <g id="reward-tree" class="reward-item" opacity="0" transform="translate(115, 175)">
+              <rect x="-6" y="5" width="12" height="35" rx="3" fill="#6D4C41" />
+              <!-- Ağaç Taç Yaprakları -->
+              <circle cx="0" cy="-6" r="24" fill="#66BB6A" />
+              <circle cx="-14" cy="4" r="16" fill="#4CAF50" />
+              <circle cx="14" cy="4" r="16" fill="#43A047" />
+              <!-- Kırmızı Elmalar -->
+              <circle cx="-6" cy="-8" r="3.5" fill="#E53935" />
+              <circle cx="8" cy="-2" r="3.5" fill="#E53935" />
+              <circle cx="-4" cy="10" r="3.5" fill="#E53935" />
+            </g>
+
+            <!-- 15 Doğru: Sıcak Hava Balonu -->
+            <g id="reward-balloon" class="reward-item" opacity="0" transform="translate(420, 95)">
+              <!-- Balon Gövdesi -->
+              <ellipse cx="0" cy="-18" rx="18" ry="24" fill="url(#balloonPattern)" stroke="#FFF" stroke-width="1.5" />
+              <!-- İpler ve Sepet -->
+              <line x1="-7" y1="6" x2="-4" y2="15" stroke="#795548" stroke-width="1.2" />
+              <line x1="7" y1="6" x2="4" y2="15" stroke="#795548" stroke-width="1.2" />
+              <rect x="-6" y="15" width="12" height="9" rx="2" fill="#8D6E63" stroke="#5D4037" stroke-width="1" />
+            </g>
+
+            <!-- 20 Doğru: Sevimli Köpek ve Kulübesi -->
+            <g id="reward-doghouse" class="reward-item" opacity="0" transform="translate(370, 195)">
+              <!-- Kulübe -->
+              <rect x="-20" y="-8" width="40" height="32" rx="3" fill="#D87A4F" stroke="#8D381B" stroke-width="1.5" />
+              <polygon points="-25,-8 0,-26 25,-8" fill="#A84320" stroke="#66200A" stroke-width="1.5" />
+              <!-- Kapı Açıklığı -->
+              <ellipse cx="0" cy="11" rx="9" ry="12" fill="#3E2723" />
+              <!-- Sevimli Köpek (Kulübenin Önünde) -->
+              <g transform="translate(-18, 12)">
+                <ellipse cx="0" cy="0" rx="9" ry="7" fill="#F5BA82" />
+                <circle cx="-5" cy="-7" r="6" fill="#F5BA82" />
+                <circle cx="-7" cy="-8" r="1.8" fill="#3E2723" />
+                <ellipse cx="-9" cy="-6" rx="2" ry="1.5" fill="#FF7043" />
+                <ellipse cx="1" cy="-12" rx="3" ry="5" fill="#C98A4E" transform="rotate(20)" />
+                <!-- Kemik / Tasma -->
+                <circle cx="-2" cy="-2" r="2.5" fill="#E53935" />
+              </g>
+            </g>
+
+          </svg>
+        </div>
+
+        <!-- OYUNCAKSI VE SEVİMLİ MODERN ANALOG SAAT -->
+        <div class="clock-display-card">
+          <div id="clock-wrapper" class="clock-3d-wrapper">
+            <svg id="analog-clock" viewBox="0 0 240 240" role="img" aria-label="Analog Saat Kadranı">
+              <defs>
+                <!-- Dış Çerçeve 3D Gradyanı -->
+                <linearGradient id="clockBezelGrad" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#FFFFFF" />
+                  <stop offset="35%" stop-color="#E2E8F0" />
+                  <stop offset="100%" stop-color="#CBD5E1" />
+                </linearGradient>
+
+                <!-- Kadran İç Derinlik Gradyanı -->
+                <radialGradient id="clockFaceGrad" cx="50%" cy="50%" r="50%">
+                  <stop offset="85%" stop-color="#FFFFFF" />
+                  <stop offset="100%" stop-color="#F1F5F9" />
+                </radialGradient>
+
+                <!-- Akrep ve Yelkovan Yumuşak Gölgeleri -->
+                <filter id="handShadow" x="-20%" y="-20%" width="150%" height="150%">
+                  <feDropShadow dx="2" dy="4" stdDeviation="3" flood-color="#0F172A" flood-opacity="0.25" />
+                </filter>
+              </defs>
+
+              <!-- Dış Kalın Bezel / Saat Kasası -->
+              <circle id="clock-bezel" cx="120" cy="120" r="114" fill="url(#clockBezelGrad)" stroke="var(--bezel-border)" stroke-width="4" />
+              
+              <!-- İç Altın Halka (Streak 3+ olunca parıldar) -->
+              <circle id="clock-gold-rim" cx="120" cy="120" r="106" fill="none" stroke="transparent" stroke-width="4" />
+
+              <!-- Kadran Gövdesi -->
+              <circle cx="120" cy="120" r="104" fill="url(#clockFaceGrad)" />
+
+              <!-- 60 Dakika Çentikleri -->
+              <g id="minute-ticks"></g>
+
+              <!-- Gizli 5'er Dakikalık İpucu Sayıları (05, 10, 15...) -->
+              <g id="minute-labels" class="minute-hint-labels" opacity="0"></g>
+
+              <!-- 1'den 12'ye Saat Sayıları -->
+              <g id="hour-numbers" class="clock-numbers-group"></g>
+
+              <!-- AKREP: Tombul, Lacivert/Mor Kapsül -->
+              <g id="hour-hand-group" class="clock-hand" filter="url(#handShadow)">
+                <line id="hour-hand" x1="120" y1="120" x2="120" y2="58" stroke="var(--hand-hour-color)" stroke-width="9" stroke-linecap="round" />
+                <circle cx="120" cy="58" r="3" fill="#FFFFFF" opacity="0.8" />
+              </g>
+
+              <!-- YELKOVAN: Canlı Mercan/Turuncu Zarif Ok -->
+              <g id="minute-hand-group" class="clock-hand" filter="url(#handShadow)">
+                <line id="minute-hand" x1="120" y1="128" x2="120" y2="30" stroke="var(--hand-minute-color)" stroke-width="5.5" stroke-linecap="round" />
+                <!-- Yelkovan ucu minik ok başlığı -->
+                <polygon points="120,22 115,34 125,34" fill="var(--hand-minute-color)" />
+              </g>
+
+              <!-- Orta Pivot / Göbek Düğmesi -->
+              <circle cx="120" cy="120" r="8" fill="#1E293B" />
+              <circle cx="120" cy="120" r="4" fill="#F8FAFC" />
+            </svg>
+          </div>
+
+          <!-- Saat Altı Küçük Bilgi Rozetleri (Akrep = Saat, Yelkovan = Dakika) -->
+          <div class="clock-legend">
+            <span class="legend-badge hour-badge"><span class="badge-dot dot-hour"></span> Akrep (Saat)</span>
+            <span class="legend-badge min-badge"><span class="badge-dot dot-min"></span> Yelkovan (Dakika)</span>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- SAĞ / ALT SÜTUN: Görev Hikayesi & Yanıt Alanı -->
+      <section class="question-action-card">
+
+        <!-- Görev / Hikaye Balonu -->
+        <div class="speech-bubble-container">
+          <div class="mascot-avatar" id="mascot-face">🦉</div>
+          <div class="speech-bubble">
+            <p id="story-text" class="story-text">Günün saati yükleniyor...</p>
+            <h2 id="question-text" class="question-title">Bu saat kaçı gösteriyor?</h2>
+          </div>
+        </div>
+
+        <!-- ==============================================
+             SORU TİPİ 1: iOS Tarzı 3D Wheel Picker
+             ============================================== -->
+        <div id="wheel-picker-area" class="interactive-mode-box" style="display:none">
+          <div class="wheel-picker-card">
+            
+            <!-- Saat Çarkı -->
+            <div class="wheel-box">
+              <span class="wheel-header">SAAT (00-23)</span>
+              <div class="wheel-viewport" id="hour-wheel-viewport">
+                <div class="wheel-glass-highlight"></div>
+                <div class="wheel-track" id="hour-wheel-track" role="listbox"></div>
               </div>
             </div>
-          </div>
-          <div class="wheel-separator">:</div>
-          <div class="wheel-column">
-            <label class="wheel-label">Dakika</label>
-            <div class="wheel-viewport" id="minute-wheel-viewport">
-              <div class="wheel-highlight"></div>
-              <div class="wheel-track" id="minute-wheel-track" role="listbox" aria-label="Dakika seçimi">
-                <!-- JS ile 00,05,...,55 doldurulacak -->
+
+            <!-- Ortadaki İki Nokta -->
+            <div class="wheel-colon-box">
+              <span class="wheel-colon">:</span>
+            </div>
+
+            <!-- Dakika Çarkı -->
+            <div class="wheel-box">
+              <span class="wheel-header">DAKİKA (00-55)</span>
+              <div class="wheel-viewport" id="minute-wheel-viewport">
+                <div class="wheel-glass-highlight"></div>
+                <div class="wheel-track" id="minute-wheel-track" role="listbox"></div>
               </div>
             </div>
+
+          </div>
+
+          <!-- 3D Büyük Buton -->
+          <button id="submit-wheel" class="bouncy-btn btn-success" type="button">
+            <span class="btn-icon">✨</span>
+            <span class="btn-label">Cevabımı Kontrol Et</span>
+          </button>
+        </div>
+
+        <!-- ==============================================
+             SORU TİPİ 2: 4 Renkli Çoktan Seçmeli Kart
+             ============================================== -->
+        <div id="multiple-choice-area" class="interactive-mode-box" style="display:none">
+          <div id="choices-grid" class="choices-grid">
+            <!-- JavaScript dinamik butonları (A, B, C, D) oluşturur -->
           </div>
         </div>
-        <button id="submit-wheel" class="btn btn-primary" type="button">Kontrol Et</button>
-      </div>
 
-      <!-- Tip 2: Çoktan Seçmeli -->
-      <div id="multiple-choice-area" class="answer-area" style="display:none" role="group" aria-label="Şıklar">
-        <div id="choices-grid">
-          <!-- JS ile 4 şık doldurulacak -->
+        <!-- Geri Bildirim Alanı (Doğru / Yanlış / İpucu) -->
+        <div id="feedback-area" class="feedback-container">
+          <div id="feedback-message" class="feedback-banner"></div>
+          <button id="next-question-btn" class="bouncy-btn btn-primary next-btn" style="display:none" type="button">
+            <span class="btn-label">Sonraki Göreve Geç</span>
+            <span class="btn-icon">🚀</span>
+          </button>
         </div>
-      </div>
 
-      <!-- Geri bildirim -->
-      <div id="feedback-area" aria-live="assertive">
-        <div id="feedback-message" class="feedback-message"></div>
-        <button id="next-question-btn" class="btn btn-primary" style="display:none" type="button">Sonraki Soru →</button>
-      </div>
+      </section>
 
-    </section>
+    </main>
 
   </div>
 
+  <!-- Scriptler: Sıfır build aracı, doğrudan %100 yerel ve GitHub Pages uyumlu -->
   <script src="js/turkishTimeEngine.js"></script>
   <script src="js/audio.js"></script>
   <script src="js/app.js"></script>
