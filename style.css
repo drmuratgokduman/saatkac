@@ -1,6 +1,6 @@
 /* ==========================================================================
    ZAMAN KAŞİFİ — Bütüncül EdTech Arayüzü & İskandinav Masal Teması
-   Doğal Dikey Akış (Saat & Cevaplar Alt Alta) + Ortalanmış Vakit Rozeti
+   Mod Menüsü + Dijitalden Analoga + Konfeti Canvas + Temiz Hiyerarşi
    ========================================================================== */
 
 /* --- DİNAMİK TÜM EKRAN ATMOSFER DEĞİŞKENLERİ --- */
@@ -21,7 +21,7 @@
   --cottage-door: #6D4C41;
   --window-warm: #FEF08A;
 
-  /* Şeffaf Cam (Ultra-Glassmorphism) */
+  /* Şeffaf Cam */
   --card-glass: rgba(255, 255, 255, 0.42);
   --card-inner: rgba(255, 255, 255, 0.52);
   --card-border: rgba(255, 255, 255, 0.65);
@@ -37,7 +37,7 @@
   --badge-bg: rgba(255, 255, 255, 0.7);
 }
 
-/* ÖĞLE: Masmavi Açık Gökyüzü & Canlı Güneş */
+/* ÖĞLE */
 body[data-time-period="noon"] {
   --body-bg-gradient: linear-gradient(135deg, #0284C7 0%, #38BDF8 45%, #7DD3FC 75%, #BAE6FD 100%);
   --sky-1: #0284C7;
@@ -66,7 +66,7 @@ body[data-time-period="noon"] {
   --badge-bg: rgba(255, 255, 255, 0.75);
 }
 
-/* AKŞAMÜSTÜ: Sıcak Kor Kırmızısı, Turuncu & Gün Batımı */
+/* AKŞAMÜSTÜ */
 body[data-time-period="evening"] {
   --body-bg-gradient: linear-gradient(135deg, #312E81 0%, #6D28D9 30%, #C2410C 70%, #EA580C 100%);
   --sky-1: #4C1D95;
@@ -95,7 +95,7 @@ body[data-time-period="evening"] {
   --badge-bg: rgba(255, 237, 213, 0.75);
 }
 
-/* GECE: Derin Gece Mavisi, Samanyolu ve Ay Işığı */
+/* GECE */
 body[data-time-period="night"] {
   --body-bg-gradient: linear-gradient(135deg, #030712 0%, #0F172A 40%, #1E1B4B 75%, #172554 100%);
   --sky-1: #030712;
@@ -110,7 +110,7 @@ body[data-time-period="night"] {
   --cottage-body: #E2E8F0;
   --cottage-roof: #1E1B4B;
   --cottage-door: #0F172A;
-  --window-warm: #FDE047; /* Gece sıcacık sarı pencere */
+  --window-warm: #FDE047;
 
   --card-glass: rgba(15, 23, 42, 0.45);
   --card-inner: rgba(30, 41, 59, 0.55);
@@ -128,7 +128,7 @@ body[data-time-period="night"] {
 }
 
 /* ==========================================================================
-   RESET & MOBİL/PC ORTAK KURALLAR (SIFIR KAYDIRMA)
+   RESET & MOBİL/PC TEMEL KURALLAR (SIFIR KAYDIRMA)
    ========================================================================== */
 *, *::before, *::after {
   box-sizing: border-box;
@@ -142,7 +142,7 @@ html, body {
   height: 100%;
   height: 100dvh;
   max-height: 100dvh;
-  overflow: hidden; /* Kesinlikle sayfa kaydırma yok */
+  overflow: hidden;
   overscroll-behavior: none;
 }
 
@@ -154,34 +154,46 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 8px;
+  padding: 6px;
   transition: background 1.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+/* Konfeti Canvas Overlay */
+#confetti-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 9999;
 }
 
 /* ==========================================================================
-   ANA OYUN KAPSAYICI (PC ve Mobilde Ortalanmış Konsol)
+   ANA OYUN KAPSAYICI (Ortalanmış Konsol)
    ========================================================================== */
 .game-wrapper {
   width: 100%;
-  max-width: 580px; /* PC modunda da derli toplu, dikey akış */
+  max-width: 540px; /* PC'de de derli toplu odaklanmış konsol */
   height: 100%;
-  max-height: calc(100dvh - 16px);
+  max-height: calc(100dvh - 12px);
   background: var(--card-glass);
   backdrop-filter: blur(20px) saturate(160%);
   -webkit-backdrop-filter: blur(20px) saturate(160%);
   border: 1.5px solid var(--card-border);
-  border-radius: 22px;
+  border-radius: 20px;
   box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.4);
-  padding: 8px 12px 10px;
+  padding: 6px 12px 8px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   overflow: hidden;
-  transition: all 0.5s ease;
+  transition: all 0.4s ease;
 }
 
 /* ==========================================================================
-   1. ÜST PANEL (Logo, Puan, Seri)
+   1. ÜST PANEL
    ========================================================================== */
 .game-header {
   display: flex;
@@ -196,22 +208,16 @@ body {
 .logo-badge {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
   user-select: none;
 }
 
 .logo-icon {
-  font-size: 1.45rem;
-  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
-}
-
-.logo-text {
-  display: flex;
-  flex-direction: column;
+  font-size: 1.35rem;
 }
 
 .app-title {
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   font-weight: 700;
   letter-spacing: 0.5px;
   background: linear-gradient(135deg, #1E40AF, #6D28D9);
@@ -225,18 +231,11 @@ body[data-time-period="night"] .app-title {
   -webkit-text-fill-color: transparent;
 }
 
-.app-subtitle {
-  font-size: 0.65rem;
-  font-weight: 600;
-  color: var(--text-sub);
-  text-transform: uppercase;
-}
-
 /* Rozetler */
 .stats-group {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
 }
 
 .stat-pill {
@@ -247,9 +246,9 @@ body[data-time-period="night"] .app-title {
   backdrop-filter: blur(8px);
   border: 1.5px solid rgba(255, 255, 255, 0.6);
   border-radius: 999px;
-  padding: 2px 8px;
+  padding: 2px 7px;
   font-weight: 700;
-  font-size: 0.88rem;
+  font-size: 0.85rem;
 }
 
 body[data-time-period="night"] .stat-pill {
@@ -263,59 +262,112 @@ body[data-time-period="night"] .stat-pill {
 .reward-progress-box {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
   background: var(--badge-bg);
   border: 1.5px solid rgba(74, 222, 128, 0.6);
   border-radius: 999px;
-  padding: 2px 7px;
+  padding: 2px 6px;
 }
 
-.reward-goal-icon { font-size: 0.95rem; }
+.reward-goal-icon { font-size: 0.9rem; }
 
 .progress-track {
-  width: 42px;
-  height: 7px;
+  width: 36px;
+  height: 6px;
   background: rgba(220, 252, 231, 0.7);
-  border-radius: 8px;
+  border-radius: 6px;
   overflow: hidden;
 }
 
 .progress-fill {
   height: 100%;
   background: #22C55E;
-  border-radius: 8px;
+  border-radius: 6px;
   transition: width 0.3s ease;
 }
 
 .progress-text {
-  font-size: 0.72rem;
+  font-size: 0.68rem;
   font-weight: 700;
   color: #15803D;
 }
 body[data-time-period="night"] .progress-text { color: #6EE7B7; }
 
 /* ==========================================================================
-   2. YENİ MANZARA SAHNESİ & ORTALANMIŞ VAKİT ROZETİ
+   2. OYUN MODLARI SEÇİM MENÜSÜ (Segmented Tabs)
+   ========================================================================== */
+.game-mode-nav {
+  display: flex;
+  gap: 4px;
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(8px);
+  border: 1.5px solid var(--card-border);
+  border-radius: 12px;
+  padding: 3px;
+  margin-top: 4px;
+  flex-shrink: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.game-mode-nav::-webkit-scrollbar { display: none; }
+
+body[data-time-period="night"] .game-mode-nav {
+  background: rgba(30, 41, 59, 0.55);
+}
+
+.mode-tab-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-height: 28px;
+  padding: 3px 6px;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text-sub);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.mode-tab-btn:hover {
+  background: rgba(255, 255, 255, 0.5);
+  color: var(--text-main);
+}
+
+.mode-tab-btn.active {
+  background: #3B82F6;
+  color: #FFFFFF;
+  box-shadow: 0 2px 6px rgba(59, 130, 246, 0.4);
+}
+
+/* ==========================================================================
+   3. MANZARA SAHNESİ & ORTALANMIŞ VAKİT ROZETİ
    ========================================================================== */
 .scene-stage-container {
   width: 100%;
   flex-shrink: 0;
-  padding-top: 3px;
+  padding-top: 2px;
 }
 
 .scene-viewport {
   width: 100%;
-  border-radius: 14px;
+  border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
   position: relative;
-  max-height: 95px;
+  max-height: 85px;
   background: var(--card-inner);
 }
 
-@media (min-height: 740px) {
+@media (min-height: 720px) {
   .scene-viewport {
-    max-height: 110px;
+    max-height: 100px;
   }
 }
 
@@ -323,40 +375,38 @@ body[data-time-period="night"] .progress-text { color: #6EE7B7; }
   display: block;
   width: 100%;
   height: 100%;
-  max-height: 110px;
+  max-height: 100px;
 }
 
 /* VAKİT ROZETİ (MANZARA GÖRSELİNİN TAM ORTASINDA) */
 .time-period-badge {
   position: absolute;
-  top: 6px;
+  top: 5px;
   left: 50%;
-  transform: translateX(-50%); /* Tam Yatay Ortada */
+  transform: translateX(-50%);
   z-index: 5;
   background: rgba(15, 23, 42, 0.65);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   border: 1.5px solid rgba(255, 255, 255, 0.45);
   border-radius: 999px;
-  padding: 3px 14px;
+  padding: 2px 12px;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
   color: #FFFFFF;
-  font-size: 0.8rem;
+  font-size: 0.76rem;
   font-weight: 800;
-  letter-spacing: 0.8px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+  letter-spacing: 0.6px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.22);
   user-select: none;
   pointer-events: none;
 }
 
-.period-icon {
-  font-size: 0.95rem;
-}
+.period-icon { font-size: 0.9rem; }
 
 /* ==========================================================================
-   3. 3D ANALOG SAAT BÖLÜMÜ
+   4. 3D ANALOG SAAT
    ========================================================================== */
 .clock-stage-container {
   display: flex;
@@ -368,19 +418,34 @@ body[data-time-period="night"] .progress-text { color: #6EE7B7; }
 }
 
 .clock-3d-wrapper {
-  /* Ekran dikey yüksekliğine göre otomatik orantılı saat boyutu */
-  width: clamp(120px, 23vh, 170px);
+  width: clamp(120px, 22vh, 165px);
   aspect-ratio: 1;
   border-radius: 50%;
-  box-shadow: 0 10px 26px -4px rgba(0, 0, 0, 0.22), 0 0 0 3px rgba(255, 255, 255, 0.85);
+  box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.22), 0 0 0 3px rgba(255, 255, 255, 0.85);
   position: relative;
   transition: all 0.4s ease;
+  user-select: none;
+}
+
+/* Sürüklenebilir Kollarda Cursor */
+.clock-3d-wrapper.interactive-mode {
+  cursor: grab;
+}
+.clock-3d-wrapper.interactive-mode:active {
+  cursor: grabbing;
 }
 
 #analog-clock {
   width: 100%;
   height: 100%;
   display: block;
+}
+
+.hand-touch-handle {
+  cursor: grab;
+}
+.hand-touch-handle:active {
+  cursor: grabbing;
 }
 
 .clock-3d-wrapper.golden-streak {
@@ -417,19 +482,24 @@ body[data-time-period="night"] .progress-text { color: #6EE7B7; }
   transform-origin: 120px 120px;
 }
 
+/* İnteraktif sürükleme esnasında anlık takip için transition none */
+#hour-hand-group.dragging, #minute-hand-group.dragging {
+  transition: none !important;
+}
+
 .clock-legend {
   display: flex;
   gap: 8px;
-  margin-top: 3px;
+  margin-top: 2px;
 }
 
 .legend-badge {
   display: flex;
   align-items: center;
   gap: 4px;
-  font-size: 0.7rem;
+  font-size: 0.68rem;
   font-weight: 700;
-  padding: 2px 7px;
+  padding: 1px 7px;
   border-radius: 999px;
   background: var(--badge-bg);
   border: 1px solid var(--card-border);
@@ -445,7 +515,7 @@ body[data-time-period="night"] .progress-text { color: #6EE7B7; }
 .dot-min { background: var(--hand-minute-color); }
 
 /* ==========================================================================
-   4. CEVAP PANELİ (Saat ile Cevaplar Alt Alta)
+   5. CEVAP PANELİ (Düzenli & Ferah Boşluklar)
    ========================================================================== */
 .question-action-card {
   flex: 1;
@@ -461,52 +531,69 @@ body[data-time-period="night"] .progress-text { color: #6EE7B7; }
   padding: 8px 12px;
 }
 
-/* Konuşma Balonu */
-.speech-bubble-container {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+/* Soru Başlık Kutusu */
+.question-header-box {
+  text-align: center;
   flex-shrink: 0;
-}
-
-.mascot-avatar {
-  font-size: 1.7rem;
-  background: var(--bubble-bg);
-  width: 40px;
-  height: 40px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
-  flex-shrink: 0;
-  border: 1.5px solid var(--bubble-border);
-}
-
-.speech-bubble {
-  background: var(--bubble-bg);
-  border: 1.5px solid var(--bubble-border);
-  border-radius: 12px;
-  padding: 5px 10px;
-  flex: 1;
-}
-
-.story-text {
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--text-sub);
-  line-height: 1.2;
 }
 
 .question-title {
-  font-size: 1.02rem;
+  font-size: 1.05rem;
   font-weight: 700;
   color: var(--text-main);
   line-height: 1.25;
 }
 
 /* ==========================================================================
-   5. SORU TİPİ 1: WHEEL PICKER (iOS 3D Silindir)
+   MOD 1: DİJİTALDEN ANALOGA KARTI
+   ========================================================================== */
+.target-digital-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  background: var(--bubble-bg);
+  border: 1.5px solid var(--bubble-border);
+  border-radius: 14px;
+  padding: 6px 14px;
+  text-align: center;
+}
+
+.digital-label {
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: var(--text-sub);
+  letter-spacing: 1px;
+}
+
+.digital-clock-display {
+  font-size: 2.2rem;
+  font-weight: 900;
+  font-family: 'Fredoka', monospace;
+  color: #2563EB;
+  letter-spacing: 2px;
+  background: rgba(37, 99, 235, 0.08);
+  border: 2px solid rgba(37, 99, 235, 0.3);
+  border-radius: 12px;
+  padding: 2px 18px;
+  line-height: 1.1;
+}
+
+body[data-time-period="night"] .digital-clock-display {
+  color: #60A5FA;
+  background: rgba(96, 165, 250, 0.12);
+  border-color: rgba(96, 165, 250, 0.4);
+}
+
+.digital-hint-text {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-sub);
+}
+
+/* ==========================================================================
+   MOD 2: WHEEL PICKER
    ========================================================================== */
 .interactive-mode-box {
   flex: 1;
@@ -524,7 +611,7 @@ body[data-time-period="night"] .progress-text { color: #6EE7B7; }
   background: var(--bubble-bg);
   border: 1.5px solid var(--bubble-border);
   border-radius: 14px;
-  padding: 6px 10px;
+  padding: 5px 10px;
 }
 
 .wheel-box {
@@ -543,8 +630,8 @@ body[data-time-period="night"] .progress-text { color: #6EE7B7; }
 
 .wheel-viewport {
   position: relative;
-  width: 76px;
-  height: 105px;
+  width: 74px;
+  height: 95px;
   background: var(--wheel-bg);
   border-radius: 10px;
   border: 2px solid var(--wheel-border);
@@ -560,7 +647,7 @@ body[data-time-period="night"] .progress-text { color: #6EE7B7; }
   position: absolute;
   left: 0;
   right: 0;
-  height: 34px;
+  height: 30px;
   pointer-events: none;
   z-index: 3;
 }
@@ -578,7 +665,7 @@ body[data-time-period="night"] .progress-text { color: #6EE7B7; }
   top: 50%;
   left: 4px;
   right: 4px;
-  height: 35px;
+  height: 33px;
   transform: translateY(-50%);
   background: rgba(59, 130, 246, 0.18);
   border-radius: 8px;
@@ -588,11 +675,11 @@ body[data-time-period="night"] .progress-text { color: #6EE7B7; }
 }
 
 .wheel-item {
-  height: 35px;
+  height: 33px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.45rem;
+  font-size: 1.4rem;
   font-weight: 700;
   color: var(--text-main);
   transition: all 0.15s ease-out;
@@ -604,16 +691,16 @@ body[data-time-period="night"] .progress-text { color: #6EE7B7; }
 }
 
 .wheel-colon-box {
-  padding-top: 12px;
+  padding-top: 10px;
 }
 .wheel-colon {
-  font-size: 1.7rem;
+  font-size: 1.6rem;
   font-weight: 800;
   color: #3B82F6;
 }
 
 /* ==========================================================================
-   6. SORU TİPİ 2: ÇOKTAN SEÇMELİ ŞIKLAR (2x2 Grid)
+   MOD 3: ÇOKTAN SEÇMELİ ŞIKLAR
    ========================================================================== */
 .choices-grid {
   display: grid;
@@ -624,7 +711,7 @@ body[data-time-period="night"] .progress-text { color: #6EE7B7; }
 @media (min-width: 440px) {
   .choices-grid {
     grid-template-columns: 1fr 1fr;
-    gap: 7px;
+    gap: 6px;
   }
 }
 
@@ -632,7 +719,7 @@ body[data-time-period="night"] .progress-text { color: #6EE7B7; }
   display: flex;
   align-items: center;
   gap: 7px;
-  min-height: 42px;
+  min-height: 40px;
   padding: 5px 10px;
   background: var(--bubble-bg);
   border: 1.5px solid var(--bubble-border);
@@ -703,7 +790,7 @@ body[data-time-period="night"] .progress-text { color: #6EE7B7; }
 }
 
 /* ==========================================================================
-   7. 3D BUTONLAR & GERİ BİLDİRİM
+   3D BUTONLAR & GERİ BİLDİRİM
    ========================================================================== */
 .bouncy-btn {
   display: flex;
@@ -711,12 +798,12 @@ body[data-time-period="night"] .progress-text { color: #6EE7B7; }
   justify-content: center;
   gap: 7px;
   width: 100%;
-  min-height: 42px;
-  padding: 6px 16px;
+  min-height: 40px;
+  padding: 6px 14px;
   border-radius: 12px;
   border: none;
   font-family: inherit;
-  font-size: 1rem;
+  font-size: 0.98rem;
   font-weight: 700;
   cursor: pointer;
   transition: all 0.12s ease;
@@ -745,14 +832,14 @@ body[data-time-period="night"] .progress-text { color: #6EE7B7; }
   flex-direction: column;
   align-items: center;
   gap: 3px;
-  min-height: 34px;
+  min-height: 32px;
 }
 
 .feedback-banner {
   width: 100%;
   border-radius: 10px;
-  padding: 6px 10px;
-  font-size: 0.9rem;
+  padding: 5px 10px;
+  font-size: 0.88rem;
   font-weight: 700;
   text-align: center;
   display: none;
