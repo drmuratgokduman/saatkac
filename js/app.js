@@ -1,6 +1,6 @@
 // ==========================================================================
 // ZAMAN KAŞİFİ — Modern EdTech Uygulama Orkestratörü
-// app.js — UI, State, Ses ve Sahne Yönetimi
+// app.js — UI, State, Ses, Sahne ve Otomatik Akış
 // ==========================================================================
 
 // =====================
@@ -12,6 +12,7 @@ const state = {
   streak: 0,
   secondChanceActive: false,
   isFirstAttempt: true,
+  isTransitioning: false, // Yeni soruya geçiş koruması
 
   // Ödül Eşikleri
   rewards: {
@@ -31,6 +32,7 @@ const state = {
 // =====================
 const DOM = {
   app: document.getElementById('app'),
+  body: document.body,
   
   // Saat Öğeleri
   hourHandGroup: document.getElementById('hour-hand-group'),
@@ -133,7 +135,7 @@ function renderClockFace() {
     DOM.minuteTicks.appendChild(line);
   }
 
-  // 5'er Dakikalık Gizli İpucu Sayıları (Kadran Dış Çemberinde)
+  // 5'er Dakikalık Gizli İpucu Sayıları
   DOM.minuteLabels.innerHTML = '';
   const labelR = 64;
   for (let i = 0; i < 60; i += 5) {
@@ -163,7 +165,7 @@ function setClock(hour, minute) {
 }
 
 // ==========================================================================
-// 2. GÖKYÜZÜ VE SAHNE ATMOSFERİ (KOPYA KORUMALI)
+// 2. TÜM EKRAN DİNAMİK GÖKYÜZÜ (ATMOSFER YÖNETİMİ)
 // ==========================================================================
 
 function getTimePeriod(hour) {
@@ -175,6 +177,9 @@ function getTimePeriod(hour) {
 
 function updateScene(hour) {
   const period = getTimePeriod(hour);
+  
+  // TÜM SAYFA (BODY & APP) ATMOSFERE BÜRÜNÜR
+  DOM.body.setAttribute('data-time-period', period);
   DOM.app.setAttribute('data-time-period', period);
 
   if (period === 'night') {
@@ -192,7 +197,7 @@ function updateScene(hour) {
     DOM.stars.setAttribute('opacity', '0');
     DOM.clouds.setAttribute('opacity', '1');
 
-    // Güneş Konumu (Günün saatine göre gökyüzünde kavis çizer)
+    // Güneş Konumu
     let sunX, sunY;
     if (period === 'morning') {
       const prog = (hour - 6) / 4;
@@ -218,10 +223,9 @@ function updateScene(hour) {
 // 3. WHEEL PICKER (iOS 3D SİLİNDİR ETKİLEŞİMİ)
 // ==========================================================================
 
-const WHEEL_ITEM_H = 40;
+const WHEEL_ITEM_H = 36; // Mobilde kompakt 36px
 
 function initWheelPicker() {
-  // Saat Çarkı (00-23)
   DOM.hourWheelTrack.innerHTML = '';
   for (let i = 0; i < 24; i++) {
     const item = document.createElement('div');
@@ -231,7 +235,6 @@ function initWheelPicker() {
     DOM.hourWheelTrack.appendChild(item);
   }
 
-  // Dakika Çarkı (00, 05, 10, ..., 55)
   DOM.minuteWheelTrack.innerHTML = '';
   for (let i = 0; i < 60; i += 5) {
     const item = document.createElement('div');
@@ -251,9 +254,9 @@ function initWheelPicker() {
 }
 
 function scrollWheelTo(track, index) {
-  const centerOffset = (140 - WHEEL_ITEM_H) / 2;
+  const centerOffset = (110 - WHEEL_ITEM_H) / 2;
   const targetY = -(index * WHEEL_ITEM_H) + centerOffset;
-  track.style.transition = 'transform 0.25s cubic-bezier(0.25, 1, 0.5, 1)';
+  track.style.transition = 'transform 0.22s cubic-bezier(0.25, 1, 0.5, 1)';
   track.style.transform = `translateY(${targetY}px)`;
   updateDimmedItems(track, index);
 }
@@ -275,7 +278,7 @@ function setupWheelScroll(viewport, track, totalItems, onChange) {
   let currentY = 0;
   let velocity = 0;
   let lastY = 0;
-  const centerOffset = (140 - WHEEL_ITEM_H) / 2;
+  const centerOffset = (110 - WHEEL_ITEM_H) / 2;
   const minY = -((totalItems - 1) * WHEEL_ITEM_H) + centerOffset;
   const maxY = centerOffset;
 
@@ -321,7 +324,7 @@ function setupWheelScroll(viewport, track, totalItems, onChange) {
     isDragging = false;
 
     if (Math.abs(velocity) > 3) {
-      const projected = getCurrentY() + velocity * 2.5;
+      const projected = getCurrentY() + velocity * 2.2;
       const idx = Math.round((centerOffset - projected) / WHEEL_ITEM_H);
       const clamped = Math.max(0, Math.min(totalItems - 1, idx));
       scrollWheelTo(track, clamped);
@@ -332,12 +335,12 @@ function setupWheelScroll(viewport, track, totalItems, onChange) {
     }
   }
 
-  // Dokunma (Mobil)
+  // Mobil Dokunma
   viewport.addEventListener('touchstart', (e) => startDrag(e.touches[0].clientY), { passive: true });
   viewport.addEventListener('touchmove', (e) => moveDrag(e.touches[0].clientY), { passive: true });
   viewport.addEventListener('touchend', endDrag);
 
-  // Fare (Masaüstü)
+  // Masaüstü Fare
   viewport.addEventListener('mousedown', (e) => {
     e.preventDefault();
     startDrag(e.clientY);
@@ -345,7 +348,7 @@ function setupWheelScroll(viewport, track, totalItems, onChange) {
   window.addEventListener('mousemove', (e) => moveDrag(e.clientY));
   window.addEventListener('mouseup', endDrag);
 
-  // Fare Tekerleği (Scroll)
+  // Scroll Tekerleği
   viewport.addEventListener('wheel', (e) => {
     e.preventDefault();
     const curr = Math.round((centerOffset - getCurrentY()) / WHEEL_ITEM_H);
@@ -369,7 +372,7 @@ const STORIES = {
     "Dişlerini fırçala, harika bir gün seni bekliyor! 🪥",
   ],
   noon: [
-    "Teneffüs zili çaldı, bahçede yakartop zamanı! ⚽",
+    "Teneffüs zili çaldı, bahçede oyun zamanı! ⚽",
     "Öğle yemeğinde lezzetli köfteler var! 🍽️",
     "Matematik dersinde yeni bir keşif yaptık! 📐",
     "Kütüphanede macera dolu bir kitap okuyoruz! 📚",
@@ -396,13 +399,12 @@ function generateQuestion() {
 
   const stories = STORIES[period];
   const story = stories[Math.floor(Math.random() * stories.length)];
-
-  // Rastgele Soru Tipi (1: Wheel Picker, 2: 4 Şıklı Seçenek)
   const type = Math.random() < 0.5 ? 1 : 2;
 
   state.currentQuestion = { hour, minute, type, story, period };
   state.isFirstAttempt = true;
   state.secondChanceActive = false;
+  state.isTransitioning = false;
 
   return state.currentQuestion;
 }
@@ -417,17 +419,14 @@ function showQuestion(q) {
   DOM.nextQuestionBtn.style.display = 'none';
   DOM.minuteLabels.classList.remove('visible');
 
-  // Maskot Emojisi
   DOM.mascotFace.textContent = q.period === 'night' ? '🦉' : '🦊';
 
   if (q.type === 1) {
-    // Soru Tipi 1: Wheel Picker
     DOM.questionText.textContent = "Çarkları çevir ve dijital saati ayarla!";
     DOM.wheelPickerArea.style.display = 'block';
     DOM.multipleChoiceArea.style.display = 'none';
     DOM.submitWheelBtn.disabled = false;
 
-    // Çarkları başlangıçta rastgele ayarla
     const randH = Math.floor(Math.random() * 24);
     const randMIdx = Math.floor(Math.random() * 12);
     state.wheelHour = randH;
@@ -435,7 +434,6 @@ function showQuestion(q) {
     scrollWheelTo(DOM.hourWheelTrack, randH);
     scrollWheelTo(DOM.minuteWheelTrack, randMIdx);
   } else {
-    // Soru Tipi 2: Çoktan Seçmeli
     DOM.questionText.textContent = "Bu saat nasıl okunur?";
     DOM.wheelPickerArea.style.display = 'none';
     DOM.multipleChoiceArea.style.display = 'block';
@@ -452,7 +450,6 @@ function renderChoices(hour, minute) {
     ...distractors.map(d => ({ text: d, isCorrect: false })),
   ];
 
-  // Şıkları Karıştır
   for (let i = choices.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [choices[i], choices[j]] = [choices[j], choices[i]];
@@ -477,10 +474,12 @@ function renderChoices(hour, minute) {
 }
 
 // ==========================================================================
-// 5. CEVAP KONTROLÜ, GERİ BİLDİRİM VE İKİNCİ ŞANS
+// 5. CEVAP KONTROLÜ & OTOMATİK SONRAKİ SORU GEÇİŞİ
 // ==========================================================================
 
 function handleAnswer(isCorrect, element, hour, minute) {
+  if (state.isTransitioning) return; // Geçiş sırasında çift tıklamayı önler
+
   if (isCorrect) {
     onCorrect(element);
   } else {
@@ -489,6 +488,7 @@ function handleAnswer(isCorrect, element, hour, minute) {
 }
 
 function onCorrect(element) {
+  state.isTransitioning = true;
   state.totalCorrect++;
   state.streak++;
   saveProgress();
@@ -500,15 +500,19 @@ function onCorrect(element) {
 
   showBanner('Harika bildin! Süper bir zaman kaşifisin! 🌟', 'success');
   audioEngine.playCorrect();
-  DOM.nextQuestionBtn.style.display = 'flex';
-
   disableAnswerArea();
   checkGamificationRewards();
+
+  // OTOMATİK GEÇİŞ: Ses efekti ve tebrikten hemen sonra kendiliğinden yeni soruya geçer!
+  setTimeout(() => {
+    const nextQ = generateQuestion();
+    showQuestion(nextQ);
+  }, 1350);
 }
 
 function onWrong(element, hour, minute) {
   if (state.isFirstAttempt) {
-    // İKİNCİ ŞANS: Ceza yok, kadranda 5'er dakika sayıları parıldar!
+    // İKİNCİ ŞANS: Ceza yok, kadranda 5'er dakika sayıları belirir
     state.isFirstAttempt = false;
     state.secondChanceActive = true;
 
@@ -520,10 +524,10 @@ function onWrong(element, hour, minute) {
     }
 
     DOM.minuteLabels.classList.add('visible');
-    showBanner('Tekrar dene! Kadrandaki renkli dakika sayıları sana yol göstersin! 🔍', 'hint');
+    showBanner('Tekrar dene! Kadrandaki renkli dakika sayılarına bak 🔍', 'hint');
     audioEngine.playWrong();
   } else {
-    // İkinci Yanlış: Doğru gösterilir, streak sıfırlanır
+    // İkinci Yanlış: Doğru gösterilir, streak sıfırlanır, öğrencinin incelemesi için buton çıkar
     state.streak = 0;
     updateStatsDisplay();
 
@@ -532,15 +536,15 @@ function onWrong(element, hour, minute) {
     }
 
     const correct = timeEngine.timeToTurkish(hour, minute);
-    showBanner(`Doğru okunuş: "${correct}". Bir sonrakinde başaracaksın! 💪`, 'error');
+    showBanner(`Doğru okunuş: "${correct}" ✨`, 'error');
     audioEngine.playWrong();
-    DOM.nextQuestionBtn.style.display = 'flex';
 
     highlightCorrectChoice(correct);
     disableAnswerArea();
 
-    // Streak sıfırlandığı için altın çerçeveyi kaldır
     DOM.clockWrapper.classList.remove('golden-streak');
+    // Doğruyu inceledikten sonra devam etmek için manuel buton gösterilir
+    DOM.nextQuestionBtn.style.display = 'flex';
   }
 }
 
@@ -563,14 +567,13 @@ function showBanner(text, type) {
 }
 
 // ==========================================================================
-// 6. OYUNLAŞTIRMA & İLERLEME (PROGRESS BAR & ÖDÜLLER)
+// 6. OYUNLAŞTIRMA & İLERLEME
 // ==========================================================================
 
 function updateStatsDisplay() {
   DOM.totalCorrectEl.textContent = state.totalCorrect;
   DOM.currentStreakEl.textContent = state.streak;
 
-  // Sonraki Ödül Hedefi İlerleme Çubuğu
   const tc = state.totalCorrect;
   let target = 5;
   let icon = '🌳';
@@ -588,29 +591,27 @@ function updateStatsDisplay() {
 }
 
 function checkGamificationRewards() {
-  // Streak 3+ ise Altın Saat Çerçevesi
   if (state.streak >= 3) {
     DOM.clockWrapper.classList.add('golden-streak');
   }
 
-  // Kalıcı Rozetler
   const tc = state.totalCorrect;
 
   if (tc >= 5 && !state.rewards.tree) {
     state.rewards.tree = true;
-    unlockReward(DOM.rewardTree, '🌳 Bahçene ilk ağaç dikildi!');
+    unlockReward(DOM.rewardTree, '🌳 Bahçene ağaç dikildi!');
   }
   if (tc >= 10 && !state.rewards.smoke) {
     state.rewards.smoke = true;
-    unlockReward(DOM.chimneySmoke, '💨 Evin bacasından tatlı dumanlar tütüyor!');
+    unlockReward(DOM.chimneySmoke, '💨 Evin bacasından duman tütüyor!');
   }
   if (tc >= 15 && !state.rewards.balloon) {
     state.rewards.balloon = true;
-    unlockReward(DOM.rewardBalloon, '🎈 Gökyüzünde rengarenk balon süzülüyor!');
+    unlockReward(DOM.rewardBalloon, '🎈 Sıcak hava balonu süzülüyor!');
   }
   if (tc >= 20 && !state.rewards.doghouse) {
     state.rewards.doghouse = true;
-    unlockReward(DOM.rewardDoghouse, '🐕 Bahçene sevimli bir köpek kulübesi geldi!');
+    unlockReward(DOM.rewardDoghouse, '🐕 Sevimli bir köpek kulübesi geldi!');
   }
 
   saveProgress();
@@ -628,7 +629,6 @@ function unlockReward(el, msg) {
 // ==========================================================================
 
 function setupMicroInteractions() {
-  // Güneşe Tıklayınca Gülümse ve Işık Saç
   DOM.sun.addEventListener('click', () => {
     DOM.sun.animate([
       { transform: `${DOM.sun.getAttribute('transform')} scale(1)` },
@@ -638,7 +638,6 @@ function setupMicroInteractions() {
     audioEngine.playTick();
   });
 
-  // Eve Tıklayınca Sevimli Esneme
   DOM.house.addEventListener('click', () => {
     DOM.house.animate([
       { transform: 'translate(240px, 150px) scale(1)' },
@@ -648,7 +647,6 @@ function setupMicroInteractions() {
     audioEngine.playTick();
   });
 
-  // Bulutlara Tıklayınca Hafif Şeffaflaş
   DOM.clouds.addEventListener('click', () => {
     DOM.clouds.style.opacity = '0.3';
     setTimeout(() => { DOM.clouds.style.opacity = '1'; }, 600);
@@ -699,7 +697,7 @@ function init() {
     handleAnswer(isCorrect, DOM.submitWheelBtn, q.hour, q.minute);
   });
 
-  // Sonraki Soru Butonu
+  // Sonraki Soru Butonu (Yanlış cevap durumunda inceleyip geçmek için)
   DOM.nextQuestionBtn.addEventListener('click', () => {
     const nextQ = generateQuestion();
     showQuestion(nextQ);
