@@ -90,7 +90,7 @@
             <span class="period-label" id="period-label">SABAH</span>
           </div>
 
-          <svg id="scene" viewBox="0 0 500 170" preserveAspectRatio="xMidYMid meet" role="img">
+          <svg id="scene" viewBox="0 0 500 210" preserveAspectRatio="xMidYMid slice" role="img">
             <defs>
               <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
                 <stop id="skyStop1" offset="0%" stop-color="var(--sky-1)" />
@@ -121,8 +121,8 @@
               </linearGradient>
             </defs>
 
-            <!-- 1. Gökyüzü -->
-            <rect width="500" height="170" fill="url(#skyGrad)" />
+            <!-- 1. Sonsuz Gökyüzü (Dikeyde üstü tamamen doldurur) -->
+            <rect x="-100" y="-300" width="700" height="600" fill="url(#skyGrad)" />
 
             <!-- 2. Yıldızlar -->
             <g id="stars" class="scene-anim-stars" opacity="0">
@@ -178,8 +178,9 @@
             <!-- 6. Dağlar -->
             <path d="M-20,170 L50,105 L130,135 L220,95 L310,130 L400,100 L490,135 L520,170 Z" fill="url(#mountainsGrad)" />
 
-            <!-- 7. Ön Dalgalı Yeşil Tepe -->
-            <path d="M-20,170 Q110,115 250,138 T520,140 L520,170 Z" fill="url(#frontHillsGrad)" />
+            <!-- 7. Ön Dalgalı Yeşil Tepe & Alt Zemin (Dikeyde altı tamamen çimenle doldurur) -->
+            <rect x="-100" y="160" width="700" height="400" fill="url(#frontHillsGrad)" />
+            <path d="M-20,180 Q110,125 250,148 T520,150 L520,220 L-20,220 Z" fill="url(#frontHillsGrad)" />
 
             <!-- Çam Ağaçları -->
             <g transform="translate(60, 115)">
