@@ -95,6 +95,17 @@ const state = {
     smoke: false,
     balloon: false,
     doghouse: false,
+    rainbow: false,
+    birds: false,
+    flowers: false,
+    pond: false,
+    butterfly: false,
+    castle: false,
+    moat: false,
+    garden: false,
+    dragon: false,
+    fireworks: false,
+    grandCastle: false,
   },
 
   // Wheel Picker Seçimleri
@@ -147,10 +158,22 @@ const DOM = {
   rewardTree: document.getElementById('reward-tree'),
   rewardBalloon: document.getElementById('reward-balloon'),
   rewardDoghouse: document.getElementById('reward-doghouse'),
+  rewardRainbow: document.getElementById('reward-rainbow'),
+  rewardBirds: document.getElementById('reward-birds'),
+  rewardFlowers: document.getElementById('reward-flowers'),
+  rewardPond: document.getElementById('reward-pond'),
+  rewardButterfly: document.getElementById('reward-butterfly'),
+  rewardCastle: document.getElementById('reward-castle'),
+  rewardMoat: document.getElementById('reward-moat'),
+  rewardGarden: document.getElementById('reward-garden'),
+  rewardDragon: document.getElementById('reward-dragon'),
+  rewardFireworks: document.getElementById('reward-fireworks'),
+  rewardGrandCastle: document.getElementById('reward-grand-castle'),
 
   // İlerleme ve Rozetler
   totalCorrectEl: document.getElementById('total-correct'),
   currentStreakEl: document.getElementById('current-streak'),
+  rewardProgressBox: document.querySelector('.reward-progress-box'),
   rewardProgressBar: document.getElementById('reward-progress-bar'),
   rewardProgressText: document.getElementById('reward-progress-text'),
   nextRewardIcon: document.getElementById('next-reward-icon'),
@@ -158,6 +181,14 @@ const DOM = {
   // Soru ve Yanıt Alanları
   questionText: document.getElementById('question-text'),
   feedbackMessage: document.getElementById('feedback-message'),
+  wrongAnswerPanel: document.getElementById('wrong-answer-panel'),
+  wrongQuestion: document.getElementById('wrong-question'),
+  wrongAnswer: document.getElementById('wrong-answer'),
+  wrongDigitalCard: document.getElementById('wrong-digital-card'),
+  wrongDigitalClock: document.getElementById('wrong-digital-clock'),
+  wrongAnalogLabel: document.getElementById('wrong-analog-label'),
+  wrongAnalogClock: document.getElementById('wrong-analog-clock'),
+  analogClock: document.getElementById('analog-clock'),
   nextQuestionBtn: document.getElementById('next-question-btn'),
 
   // MOD 1: Dijitalden Analoga
@@ -264,14 +295,14 @@ function setClock(hour, minute, animated = true) {
 function setupInteractiveClock() {
   const svg = document.getElementById('analog-clock');
   let isDragging = false;
-  let activeHand = 'minute'; // 'minute' veya 'hour'
+  let lastAngle = null;
 
   function getAngleFromEvent(e) {
     const rect = svg.getBoundingClientRect();
     const cx = rect.left + rect.width / 2;
     const cy = rect.top + rect.height / 2;
-    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    const clientX = e.clientX;
+    const clientY = e.clientY;
 
     let rad = Math.atan2(clientY - cy, clientX - cx);
     let deg = (rad * 180) / Math.PI + 90;
@@ -280,8 +311,11 @@ function setupInteractiveClock() {
   }
 
   function onStart(e) {
-    if (state.currentQuestion.type !== 'digital-to-analog') return;
+    if (state.currentQuestion?.type !== 'digital-to-analog' || e.button > 0) return;
+    e.preventDefault();
     isDragging = true;
+    svg.setPointerCapture(e.pointerId);
+    lastAngle = getAngleFromEvent(e);
     onMove(e);
   }
 
@@ -289,15 +323,21 @@ function setupInteractiveClock() {
     if (!isDragging) return;
     const deg = getAngleFromEvent(e);
 
-    // 5 dakikalık (30 derecelik) adımlara snap
-    const stepDeg = 30; // 5 dakika = 30 derece
-    const snappedDeg = Math.round(deg / stepDeg) * stepDeg;
-    let minuteVal = Math.round((snappedDeg % 360) / 6);
-    if (minuteVal === 60) minuteVal = 0;
+    // Yelkovanı 5 dakikalık aralıklara oturt ve saat döngüsünü akrebe yansıt.
+    const previousAngle = lastAngle;
+    let angleDelta = deg - previousAngle;
+    if (angleDelta > 180) angleDelta -= 360;
+    if (angleDelta < -180) angleDelta += 360;
+    if (previousAngle > 330 && deg < 30 && angleDelta > 0) {
+      state.userHandHour = (state.userHandHour + 1) % 24;
+    } else if (previousAngle < 30 && deg > 330 && angleDelta < 0) {
+      state.userHandHour = (state.userHandHour + 23) % 24;
+    }
+    lastAngle = deg;
+    const minuteVal = (Math.round(deg / 30) % 12) * 5;
 
     if (minuteVal !== state.userHandMinute) {
       state.userHandMinute = minuteVal;
-      // Yelkovan döndükçe akrep de kademeli ilerler
       setClock(state.userHandHour, state.userHandMinute, false);
       audioEngine.playTick();
     }
@@ -306,18 +346,16 @@ function setupInteractiveClock() {
   function onEnd() {
     if (!isDragging) return;
     isDragging = false;
+    lastAngle = null;
     DOM.minuteHandGroup.classList.remove('dragging');
     DOM.hourHandGroup.classList.remove('dragging');
     setClock(state.userHandHour, state.userHandMinute, true);
   }
 
-  svg.addEventListener('mousedown', onStart);
-  window.addEventListener('mousemove', onMove);
-  window.addEventListener('mouseup', onEnd);
-
-  svg.addEventListener('touchstart', onStart, { passive: true });
-  window.addEventListener('touchmove', onMove, { passive: true });
-  window.addEventListener('touchend', onEnd);
+  svg.addEventListener('pointerdown', onStart);
+  svg.addEventListener('pointermove', onMove);
+  svg.addEventListener('pointerup', onEnd);
+  svg.addEventListener('pointercancel', onEnd);
 }
 
 // ==========================================================================
@@ -574,7 +612,7 @@ function showQuestion(q) {
 
   DOM.feedbackMessage.className = 'feedback-banner';
   DOM.feedbackMessage.style.display = 'none';
-  DOM.nextQuestionBtn.style.display = 'none';
+  DOM.wrongAnswerPanel.style.display = 'none';
   DOM.minuteLabels.classList.remove('visible');
 
   // Alanları Gizle
@@ -675,7 +713,6 @@ function onCorrect(element) {
   state.isTransitioning = true;
   state.totalCorrect++;
   state.streak++;
-  saveProgress();
   updateStatsDisplay();
 
   if (element && element.classList) {
@@ -726,39 +763,82 @@ function onWrong(element, hour, minute) {
       element.classList.add('is-wrong');
     }
 
-    let correctMsg = '';
+    let correctAnswer = '';
     if (state.currentQuestion.type === 'digital-to-analog') {
-      // Mod 1: Kollar otomatik doğru saate çevrilir
-      correctMsg = `Hedef dakika: ${state.currentQuestion.minute}. Kollar düzeltildi!`;
+      const q = state.currentQuestion;
+      const hFormatted = String(q.hour).padStart(2, '0');
+      const mFormatted = String(q.minute).padStart(2, '0');
+      const hourOnClock = q.hour % 12 || 12;
+      const nextHourOnClock = hourOnClock === 12 ? 1 : hourOnClock + 1;
+      const minuteTick = q.minute === 0 ? 12 : q.minute / 5;
+      correctAnswer = q.minute === 0
+        ? `${hFormatted}:${mFormatted} — Yelkovan 12’de, akrep ${hourOnClock} rakamını gösterir.`
+        : `${hFormatted}:${mFormatted} — Yelkovan ${minuteTick} rakamının üzerinde, akrep ${hourOnClock} ile ${nextHourOnClock} arasındadır.`;
       setClock(state.currentQuestion.hour, state.currentQuestion.minute, true);
     } else if (state.currentQuestion.type === 'analog-to-digital') {
-      // Mod 2 (Analogdan Dijitale): Çarklar dönerek doğru cevabı göstersin!
       const targetH = state.currentQuestion.hour;
       const targetMIndex = Math.floor(state.currentQuestion.minute / 5);
       state.wheelHour = targetH;
       state.wheelMinute = state.currentQuestion.minute;
 
-      // Çarkları kaydırarak doğru pozisyona getir
       scrollWheelTo(DOM.hourWheelTrack, targetH);
       scrollWheelTo(DOM.minuteWheelTrack, targetMIndex);
 
       const hFormatted = String(targetH).padStart(2, '0');
       const mFormatted = String(state.currentQuestion.minute).padStart(2, '0');
-      correctMsg = `Doğru dijital saat: ${hFormatted}:${mFormatted} ✨`;
+      correctAnswer = `${hFormatted}:${mFormatted}`;
     } else {
-      // Mod 3 (Konuşma Dili): Doğru şık işaretlenir
-      const correct = timeEngine.timeToTurkish(hour, minute);
-      correctMsg = `Doğru okunuş: "${correct}" ✨`;
-      highlightCorrectChoice(correct);
+      correctAnswer = timeEngine.timeToTurkish(hour, minute);
+      highlightCorrectChoice(correctAnswer);
     }
 
-    showBanner(correctMsg, 'error');
     audioEngine.playWrong();
 
     disableAnswerArea();
     DOM.clockWrapper.classList.remove('golden-streak');
-    DOM.nextQuestionBtn.style.display = 'flex';
+    openWrongAnswerPanel(state.currentQuestion, correctAnswer);
   }
+}
+
+function openWrongAnswerPanel(question, answer) {
+  const hFormatted = String(question.hour).padStart(2, '0');
+  const mFormatted = String(question.minute).padStart(2, '0');
+  const time = `${hFormatted}:${mFormatted}`;
+
+  if (question.type === 'digital-to-analog') {
+    DOM.wrongQuestion.textContent = `Dijital saatteki ${time} analog kadranda nasıl gösterilir?`;
+    DOM.wrongDigitalClock.textContent = time;
+    DOM.wrongDigitalCard.style.display = 'flex';
+    DOM.wrongAnalogLabel.textContent = 'DOĞRU ANALOG SAAT';
+  } else if (question.type === 'analog-to-digital') {
+    DOM.wrongQuestion.textContent = 'Kadrandaki saat dijitalde kaçtır?';
+    DOM.wrongDigitalCard.style.display = 'none';
+    DOM.wrongAnalogLabel.textContent = 'SAAT SORUSU';
+  } else {
+    DOM.wrongQuestion.textContent = 'Kadrandaki saat nasıl okunur?';
+    DOM.wrongDigitalCard.style.display = 'none';
+    DOM.wrongAnalogLabel.textContent = 'SAAT SORUSU';
+  }
+
+  DOM.wrongAnswer.textContent = answer;
+  const clockCopy = DOM.analogClock.cloneNode(true);
+  const copiedElements = [clockCopy, ...clockCopy.querySelectorAll('[id]')];
+  copiedElements.forEach((element) => {
+    if (element.id) element.id = `wrong-${element.id}`;
+  });
+  [clockCopy, ...clockCopy.querySelectorAll('*')].forEach((element) => {
+    Array.from(element.attributes).forEach((attribute) => {
+      const value = attribute.value.replace(/url\(#([^)]+)\)/g, 'url(#wrong-$1)');
+      if (value !== attribute.value) element.setAttribute(attribute.name, value);
+    });
+  });
+  clockCopy.id = 'wrong-answer-clock-svg';
+  clockCopy.classList.add('wrong-answer-clock-svg');
+  clockCopy.setAttribute('aria-label', 'Sorudaki analog saatin gösterimi');
+  DOM.wrongAnalogClock.replaceChildren(clockCopy);
+  DOM.feedbackMessage.style.display = 'none';
+  DOM.wrongAnswerPanel.style.display = 'flex';
+  DOM.nextQuestionBtn.focus({ preventScroll: true });
 }
 
 function disableAnswerArea() {
@@ -784,23 +864,37 @@ function showBanner(text, type) {
 // 10. OYUNLAŞTIRMA & İLERLEME
 // ==========================================================================
 
+const REWARD_STEPS = [
+  { total: 5, icon: '🌳' }, { total: 10, icon: '💨' },
+  { total: 15, icon: '🎈' }, { total: 20, icon: '🐕' },
+  { total: 25, icon: '🌈' }, { total: 30, icon: '🐦' },
+  { total: 35, icon: '🌷' }, { total: 40, icon: '🐸' },
+  { total: 45, icon: '🦋' }, { total: 50, icon: '🏰' },
+  { total: 60, icon: '🌉' }, { total: 70, icon: '🌹' },
+  { total: 80, icon: '🐉' }, { total: 90, icon: '🎆' },
+  { total: 100, icon: '👑' },
+];
+
 function updateStatsDisplay() {
   DOM.totalCorrectEl.textContent = state.totalCorrect;
   DOM.currentStreakEl.textContent = state.streak;
 
   const tc = state.totalCorrect;
-  let target = 5;
-  let icon = '🌳';
-
-  if (tc < 5) { target = 5; icon = '🌳'; }
-  else if (tc < 10) { target = 10; icon = '💨'; }
-  else if (tc < 15) { target = 15; icon = '🎈'; }
-  else if (tc < 20) { target = 20; icon = '🐕'; }
-  else { target = 25; icon = '👑'; }
-
-  const currentLevelProgress = tc >= 20 ? 100 : ((tc % 5) / 5) * 100;
+  const nextReward = REWARD_STEPS.find((step) => tc < step.total);
+  const stepIndex = nextReward ? REWARD_STEPS.indexOf(nextReward) : REWARD_STEPS.length;
+  const previousTotal = stepIndex > 0 ? REWARD_STEPS[stepIndex - 1].total : 0;
+  const target = nextReward?.total ?? 100;
+  const icon = nextReward?.icon ?? '👑';
+  const currentLevelProgress = nextReward
+    ? ((tc - previousTotal) / (target - previousTotal)) * 100
+    : 100;
   DOM.rewardProgressBar.style.width = `${currentLevelProgress}%`;
-  DOM.rewardProgressText.textContent = `${tc}/${target}`;
+  DOM.rewardProgressText.textContent = nextReward
+    ? `${target - tc} doğru kaldı`
+    : 'Tamamlandı!';
+  DOM.rewardProgressBox.title = nextReward
+    ? `Sıradaki ödüle ${target - tc} doğru kaldı`
+    : 'Tüm ödüller açıldı!';
   DOM.nextRewardIcon.textContent = icon;
 }
 
@@ -811,24 +905,36 @@ function checkGamificationRewards() {
 
   const tc = state.totalCorrect;
 
-  if (tc >= 5 && !state.rewards.tree) {
-    state.rewards.tree = true;
-    unlockReward(DOM.rewardTree, '🌳 Bahçene ağaç dikildi!');
-  }
-  if (tc >= 10 && !state.rewards.smoke) {
-    state.rewards.smoke = true;
-    unlockReward(DOM.chimneySmoke, '💨 Evin bacasından duman tütüyor!');
-  }
-  if (tc >= 15 && !state.rewards.balloon) {
-    state.rewards.balloon = true;
-    unlockReward(DOM.rewardBalloon, '🎈 Sıcak hava balonu süzülüyor!');
-  }
-  if (tc >= 20 && !state.rewards.doghouse) {
-    state.rewards.doghouse = true;
-    unlockReward(DOM.rewardDoghouse, '🐕 Sevimli bir köpek kulübesi geldi!');
-  }
+  const rewards = [
+    [5, 'tree', DOM.rewardTree, '🌳 Bahçene elma ağacı geldi!'],
+    [10, 'smoke', DOM.chimneySmoke, '💨 Evin bacasından duman tütüyor!'],
+    [15, 'balloon', DOM.rewardBalloon, '🎈 Sıcak hava balonu süzülüyor!'],
+    [20, 'doghouse', DOM.rewardDoghouse, '🐕 Bahçeye köpek kulübesi geldi!'],
+    [25, 'rainbow', DOM.rewardRainbow, '🌈 Bahçenin üzerinde gökkuşağı belirdi!'],
+    [30, 'birds', DOM.rewardBirds, '🐦 Bahçene kuşlar kondu!'],
+    [35, 'flowers', DOM.rewardFlowers, '🌷 Bahçende rengârenk çiçekler açtı!'],
+    [40, 'pond', DOM.rewardPond, '🐸 Kurbağalı göletin hazır!'],
+    [45, 'butterfly', DOM.rewardButterfly, '🦋 Bahçene bir kelebek geldi!'],
+    [50, 'castle', DOM.rewardCastle, '🏰 Evin görkemli bir kaleye dönüştü!'],
+    [60, 'moat', DOM.rewardMoat, '🌉 Kalenin çevresine su hendeği ve köprü eklendi!'],
+    [70, 'garden', DOM.rewardGarden, '🌹 Kaleye kraliyet bahçesi eklendi!'],
+    [80, 'dragon', DOM.rewardDragon, '🐉 Dost canlısı ejderha kaleni koruyor!'],
+    [90, 'fireworks', DOM.rewardFireworks, '🎆 Kalende kutlama başladı!'],
+  ];
 
-  saveProgress();
+  rewards.forEach(([threshold, key, element, message]) => {
+    if (tc < threshold || state.rewards[key]) return;
+    state.rewards[key] = true;
+    if (key === 'castle') DOM.house.style.opacity = '0';
+    unlockReward(element, message);
+  });
+
+  if (tc >= 100 && !state.rewards.grandCastle) {
+    state.rewards.grandCastle = true;
+    DOM.rewardCastle.classList.remove('unlocked');
+    DOM.rewardCastle.setAttribute('opacity', '0');
+    unlockReward(DOM.rewardGrandCastle, '👑 100 doğru! Kaleni büyük sancaklı bir saraya yükselttin!');
+  }
 }
 
 function unlockReward(el, msg) {
@@ -840,7 +946,7 @@ function unlockReward(el, msg) {
 }
 
 // ==========================================================================
-// 11. MİKRO-ETKİLEŞİMLER & LOCALSTORAGE
+// 11. MİKRO-ETKİLEŞİMLER
 // ==========================================================================
 
 function setupMicroInteractions() {
@@ -869,32 +975,6 @@ function setupMicroInteractions() {
   });
 }
 
-function saveProgress() {
-  try {
-    localStorage.setItem('zamanKasifiData', JSON.stringify({
-      totalCorrect: state.totalCorrect,
-      rewards: state.rewards,
-    }));
-  } catch (e) {}
-}
-
-function loadProgress() {
-  try {
-    const raw = localStorage.getItem('zamanKasifiData');
-    if (raw) {
-      const data = JSON.parse(raw);
-      state.totalCorrect = data.totalCorrect || 0;
-      state.rewards = data.rewards || state.rewards;
-
-      if (state.rewards.tree) DOM.rewardTree.classList.add('unlocked');
-      if (state.rewards.smoke) DOM.chimneySmoke.classList.add('unlocked');
-      if (state.rewards.balloon) DOM.rewardBalloon.classList.add('unlocked');
-      if (state.rewards.doghouse) DOM.rewardDoghouse.classList.add('unlocked');
-    }
-  } catch (e) {}
-  updateStatsDisplay();
-}
-
 // ==========================================================================
 // 12. BAŞLATICI (INITIALIZER)
 // ==========================================================================
@@ -903,7 +983,7 @@ function init() {
   renderClockFace();
   initWheelPicker();
   setupInteractiveClock();
-  loadProgress();
+  updateStatsDisplay();
   setupMicroInteractions();
 
   // Mod Dropdown Mantığı (Tıklayınca Açılır/Kapanır)
@@ -955,7 +1035,8 @@ function init() {
   DOM.submitAnalogHandBtn.addEventListener('click', () => {
     const q = state.currentQuestion;
     // Yelkovan hedef dakikaya eşit mi?
-    const isCorrect = state.userHandMinute === q.minute;
+    const isCorrect = state.userHandMinute === q.minute
+      && state.userHandHour % 12 === q.hour % 12;
     handleAnswer(isCorrect, DOM.submitAnalogHandBtn, q.hour, q.minute);
   });
 

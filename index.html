@@ -8,7 +8,7 @@
   <title>Zaman Kaşifi ⏰ Macera Başlıyor!</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@700;800;900&display=swap&subset=latin,latin-ext" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -292,6 +292,86 @@
                  ============================================================== -->
             <path d="M-100,165 Q130,175 300,160 T600,170 L600,450 L-100,450 Z" fill="url(#deepMeadowGrad)" />
 
+            <!-- Yeni ödüller: sahne ilerledikçe açılır -->
+            <g id="reward-rainbow" class="reward-item" opacity="0" fill="none" stroke-linecap="round">
+              <path d="M172,48 A48,48 0 0 1 268,48" stroke="#EF4444" stroke-width="5" />
+              <path d="M179,48 A41,41 0 0 1 261,48" stroke="#F97316" stroke-width="5" />
+              <path d="M186,48 A34,34 0 0 1 254,48" stroke="#FACC15" stroke-width="5" />
+              <path d="M193,48 A27,27 0 0 1 247,48" stroke="#22C55E" stroke-width="5" />
+              <path d="M200,48 A20,20 0 0 1 240,48" stroke="#3B82F6" stroke-width="5" />
+              <ellipse cx="166" cy="48" rx="13" ry="5" fill="#FFF" stroke="none" />
+              <ellipse cx="274" cy="48" rx="13" ry="5" fill="#FFF" stroke="none" />
+            </g>
+            <g id="reward-birds" class="reward-item" opacity="0" fill="none" stroke="#334155" stroke-width="2.5" stroke-linecap="round">
+              <path d="M300,30 q7,-8 14,0 q7,-8 14,0" />
+              <path d="M344,48 q6,-7 12,0 q6,-7 12,0" />
+              <path d="M270,65 q5,-6 10,0 q5,-6 10,0" />
+            </g>
+            <g id="reward-flowers" class="reward-item" opacity="0">
+              <path d="M105,172 v-18 M120,172 v-23 M135,172 v-17 M150,172 v-22 M165,172 v-16" stroke="#15803D" stroke-width="2.5" />
+              <g fill="#F472B6"><circle cx="105" cy="151" r="4"/><circle cx="120" cy="145" r="4"/><circle cx="135" cy="153" r="4"/><circle cx="150" cy="150" r="4"/><circle cx="165" cy="156" r="4"/></g>
+              <g fill="#FDE047"><circle cx="105" cy="151" r="1.5"/><circle cx="120" cy="145" r="1.5"/><circle cx="135" cy="153" r="1.5"/><circle cx="150" cy="150" r="1.5"/><circle cx="165" cy="156" r="1.5"/></g>
+            </g>
+            <g id="reward-pond" class="reward-item" opacity="0">
+              <ellipse cx="465" cy="176" rx="35" ry="12" fill="#38BDF8" stroke="#E0F2FE" stroke-width="2" />
+              <path d="M438,176 q10,5 20,0 t20,0 t20,0" fill="none" stroke="#BAE6FD" stroke-width="2" />
+              <g transform="translate(466,164)">
+                <ellipse cx="0" cy="0" rx="10" ry="7" fill="#65A30D" />
+                <circle cx="-5" cy="-5" r="4" fill="#84CC16"/><circle cx="5" cy="-5" r="4" fill="#84CC16"/>
+                <circle cx="-5" cy="-5" r="1" fill="#1F2937"/><circle cx="5" cy="-5" r="1" fill="#1F2937"/>
+                <path d="M-3,1 q3,3 6,0" fill="none" stroke="#1F2937" stroke-width="1" />
+              </g>
+              <ellipse cx="433" cy="168" rx="12" ry="4" fill="#4ADE80" />
+              <ellipse cx="497" cy="170" rx="12" ry="4" fill="#4ADE80" />
+            </g>
+            <g id="reward-butterfly" class="reward-item" opacity="0" transform="translate(190,82)">
+              <ellipse cx="-5" cy="-3" rx="6" ry="8" fill="#A855F7"/><ellipse cx="5" cy="-3" rx="6" ry="8" fill="#EC4899"/>
+              <ellipse cx="-4" cy="5" rx="4" ry="5" fill="#F0ABFC"/><ellipse cx="4" cy="5" rx="4" ry="5" fill="#C084FC"/>
+              <path d="M0,-5 v13 M0,-4 q-5,-7 -7,-5 M0,-4 q5,-7 7,-5" fill="none" stroke="#581C87" stroke-width="1.4" />
+            </g>
+            <g id="reward-castle" class="reward-item" opacity="0" transform="translate(250,108)">
+              <rect x="-46" y="3" width="92" height="37" rx="2" fill="#C4B5FD" stroke="#5B21B6" stroke-width="2" />
+              <rect x="-55" y="-15" width="24" height="58" fill="#A78BFA" stroke="#5B21B6" stroke-width="2" />
+              <rect x="31" y="-15" width="24" height="58" fill="#A78BFA" stroke="#5B21B6" stroke-width="2" />
+              <path d="M-58,-15 h30 l-5,-10 -5,6 -5,-8 -5,8 -5,-6z M28,-15 h30 l-5,-10 -5,6 -5,-8 -5,8 -5,-6z" fill="#6D28D9" stroke="#4C1D95" stroke-width="1.5" />
+              <path d="M-12,40 v-22 q12,-18 24,0 v22z" fill="#6D28D9" stroke="#4C1D95" stroke-width="1.5" />
+              <rect x="-39" y="0" width="9" height="13" rx="4" fill="#FDE68A"/><rect x="30" y="0" width="9" height="13" rx="4" fill="#FDE68A"/>
+              <path d="M-43,-25 v-15 m0,0 l14,5 -14,5 M43,-25 v-15 m0,0 l14,5 -14,5" fill="none" stroke="#78350F" stroke-width="2" />
+              <path class="castle-flags" d="M-43,-40 l14,5 -14,5z M43,-40 l14,5 -14,5z" fill="#EF4444" />
+            </g>
+            <g id="reward-moat" class="reward-item" opacity="0">
+              <path d="M188,153 Q250,178 312,153" fill="none" stroke="#38BDF8" stroke-width="9" stroke-linecap="round" />
+              <path d="M225,158 l0,13 M232,160 l0,14 M239,161 l0,14 M246,162 l0,14 M253,162 l0,14 M260,161 l0,14 M267,160 l0,14 M274,158 l0,13" stroke="#92400E" stroke-width="2" />
+              <path d="M221,158 l29,4 29,-4" fill="none" stroke="#FBBF24" stroke-width="3" />
+            </g>
+            <g id="reward-garden" class="reward-item" opacity="0">
+              <path d="M320,164 h55 M325,164 v-16 M340,164 v-20 M355,164 v-18 M370,164 v-14" stroke="#15803D" stroke-width="2" />
+              <g fill="#F43F5E"><circle cx="325" cy="146" r="5"/><circle cx="340" cy="142" r="5"/><circle cx="355" cy="144" r="5"/><circle cx="370" cy="150" r="5"/></g>
+              <g fill="#FDE047"><circle cx="325" cy="146" r="1.5"/><circle cx="340" cy="142" r="1.5"/><circle cx="355" cy="144" r="1.5"/><circle cx="370" cy="150" r="1.5"/></g>
+            </g>
+            <g id="reward-dragon" class="reward-item" opacity="0" transform="translate(402,91)">
+              <path d="M-17,7 q-8,-9 1,-15 l8,5 q8,-10 18,-2 l7,9 -6,9 h-18 l-6,7 -7,-2 5,-8z" fill="#34D399" stroke="#047857" stroke-width="2" />
+              <path d="M-6,-5 l-7,-11 13,6 M9,-4 l8,-10 1,15 M-13,7 q-15,4 -17,14 q12,-4 20,-4" fill="#6EE7B7" stroke="#047857" stroke-width="2" />
+              <circle cx="7" cy="0" r="1.5" fill="#111827"/><path d="M9,5 q3,2 6,0" fill="none" stroke="#064E3B" stroke-width="1.4" />
+            </g>
+            <g id="reward-fireworks" class="reward-item" opacity="0" fill="none" stroke-width="2.5" stroke-linecap="round">
+              <g stroke="#FDE047"><path d="M115,35 v-10 M115,55 v10 M95,45 h-10 M135,45 h10 M101,31 l-7,-7 M129,59 l7,7 M129,31 l7,-7 M101,59 l-7,7"/></g>
+              <g stroke="#FB7185"><path d="M390,50 v-8 M390,66 v8 M374,58 h-8 M406,58 h8 M379,47 l-6,-6 M401,69 l6,6 M401,47 l6,-6 M379,69 l-6,6"/></g>
+            </g>
+            <g id="reward-grand-castle" class="reward-item" opacity="0" transform="translate(250,108)">
+              <rect x="-65" y="-1" width="130" height="45" rx="3" fill="#FDE68A" stroke="#92400E" stroke-width="3" />
+              <rect x="-76" y="-28" width="28" height="72" fill="#FBBF24" stroke="#92400E" stroke-width="3" />
+              <rect x="48" y="-28" width="28" height="72" fill="#FBBF24" stroke="#92400E" stroke-width="3" />
+              <rect x="-28" y="-20" width="56" height="64" fill="#FCD34D" stroke="#92400E" stroke-width="2.5" />
+              <path d="M-80,-28 h36 l-6,-13 -6,7 -6,-11 -6,11 -6,-7z M44,-28 h36 l-6,-13 -6,7 -6,-11 -6,11 -6,-7z M-31,-20 h62 l-8,-16 -8,8 -7,-14 -8,14 -8,-8z" fill="#7C3AED" stroke="#4C1D95" stroke-width="1.5" />
+              <path d="M-12,44 v-24 q12,-18 24,0 v24z" fill="#7C2D12" stroke="#78350F" stroke-width="2" />
+              <g fill="#FFF7AE" stroke="#92400E" stroke-width="1.3"><rect x="-68" y="-5" width="10" height="15" rx="5"/><rect x="58" y="-5" width="10" height="15" rx="5"/><rect x="-18" y="-1" width="10" height="15" rx="5"/><rect x="8" y="-1" width="10" height="15" rx="5"/></g>
+              <g stroke="#78350F" stroke-width="2"><path d="M-62,-41 v-18 M62,-41 v-18 M0,-36 v-20 M-75,-28 v-18 M75,-28 v-18"/></g>
+              <g class="castle-flags" fill="#EF4444"><path d="M-62,-59 l22,6 -22,7z M62,-59 l22,6 -22,7z M0,-56 l24,7 -24,7z M-75,-46 l19,5 -19,6z M75,-46 l19,5 -19,6z"/></g>
+              <path d="M-76,-2 l-12,9 12,9 M76,-2 l12,9 -12,9 M-35,-24 l-10,7 10,7 M35,-24 l10,7 -10,7" fill="#38BDF8" stroke="#075985" stroke-width="2" />
+              <path d="M-85,44 h170" stroke="#92400E" stroke-width="5" />
+            </g>
+
             <!-- Minik Sevimli Kır Çiçekleri (Genişletilmiş Alt Alanda) -->
             <g transform="translate(100, 200)">
               <circle cx="0" cy="0" r="3" fill="#FFF59D" />
@@ -394,7 +474,7 @@
             <div class="target-digital-card">
               <span class="digital-label">HEDEF SAAT:</span>
               <div class="digital-clock-display" id="target-digital-clock">14:25</div>
-              <span class="digital-hint-text">👆 Saatin kollarını çevirerek ayarla</span>
+              <span class="digital-hint-text">Yelkovanı sürükle; akrep dakika ilerledikçe hareket eder.</span>
             </div>
             <button id="submit-analog-hand" class="bouncy-btn btn-success" type="button">
               <span class="btn-icon">✨</span>
@@ -440,16 +520,41 @@
           <!-- Geri Bildirim Alanı -->
           <div id="feedback-area" class="feedback-container">
             <div id="feedback-message" class="feedback-banner"></div>
-            <button id="next-question-btn" class="bouncy-btn btn-primary next-btn" style="display:none" type="button">
-              <span class="btn-label">Sonraki Göreve Geç</span>
-              <span class="btn-icon">🚀</span>
-            </button>
           </div>
         </div>
 
       </section>
 
     </main>
+
+    <div id="wrong-answer-panel" class="wrong-answer-backdrop" style="display:none" role="dialog" aria-modal="true" aria-labelledby="wrong-panel-title">
+      <section class="wrong-answer-card">
+        <div class="wrong-panel-icon" aria-hidden="true">💡</div>
+        <h2 id="wrong-panel-title">Birlikte doğru cevaba bakalım</h2>
+        <div class="wrong-panel-detail">
+          <span class="wrong-panel-label">SORU</span>
+          <p id="wrong-question"></p>
+        </div>
+        <div id="wrong-answer-visuals" class="wrong-answer-visuals">
+          <div id="wrong-digital-card" class="wrong-visual-card" style="display:none">
+            <span class="wrong-panel-label">DİJİTAL HEDEF</span>
+            <strong id="wrong-digital-clock" class="wrong-digital-clock"></strong>
+          </div>
+          <div id="wrong-analog-card" class="wrong-visual-card">
+            <span id="wrong-analog-label" class="wrong-panel-label">SAAT SORUSU</span>
+            <div id="wrong-analog-clock"></div>
+          </div>
+        </div>
+        <div class="wrong-panel-detail correct-answer-detail">
+          <span class="wrong-panel-label">DOĞRU CEVAP</span>
+          <p id="wrong-answer"></p>
+        </div>
+        <button id="next-question-btn" class="bouncy-btn btn-primary next-btn" type="button">
+          <span class="btn-label">Sonraki Göreve Geç</span>
+          <span class="btn-icon">🚀</span>
+        </button>
+      </section>
+    </div>
 
   </div>
 
