@@ -455,21 +455,8 @@ body[data-time-period="night"] .progress-text { color: #6EE7B7; }
   overflow: hidden;
   box-shadow: 0 4px 14px rgba(0,0,0,0.12);
   position: relative;
-  /* Üst tarafı gökyüzü rengi, alt tarafı çimen yeşili ile doldurur */
-  background: linear-gradient(
-    to bottom,
-    var(--sky-1) 0%,
-    var(--sky-1) 25%,
-    var(--sky-2) 48%,
-    var(--hill-1) 52%,
-    var(--hill-2) 75%,
-    var(--hill-2) 100%
-  );
+  background: var(--card-inner);
   max-height: clamp(90px, 15vh, 120px);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
 }
 
 @media (min-width: 860px) {
@@ -482,10 +469,7 @@ body[data-time-period="night"] .progress-text { color: #6EE7B7; }
 #scene {
   display: block;
   width: 100%;
-  height: auto;
-  max-height: 100%;
-  /* Yanlardan kesinlikle KESİLMEZ, tam oturur */
-  object-fit: contain;
+  height: 100%;
 }
 
 /* VAKİT ROZETİ (MANZARA GÖRSELİNİN TAM ORTASINDA) */

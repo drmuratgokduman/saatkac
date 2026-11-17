@@ -12,7 +12,6 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <!-- Konfeti Efekti Katmanı -->
   <canvas id="confetti-canvas"></canvas>
 
   <div id="app" class="game-wrapper" data-time-period="morning">
@@ -25,7 +24,7 @@
           <span class="app-title">ZAMAN KAŞİFİ</span>
         </div>
 
-        <!-- DROPDOWN MOD SEÇİCİ (EN ÜSTTE LOGO YANINDA GİZLİ) -->
+        <!-- DROPDOWN MOD SEÇİCİ -->
         <div class="mode-dropdown-container">
           <button id="mode-dropdown-trigger" class="mode-dropdown-btn" type="button" aria-expanded="false" title="Oyun Modunu Değiştir">
             <span id="active-mode-icon">🎲</span>
@@ -54,19 +53,16 @@
       </div>
 
       <div class="stats-group">
-        <!-- Doğru Sayısı -->
         <div class="stat-pill star-pill" title="Toplam Doğru">
           <span class="pill-icon">⭐</span>
           <span id="total-correct" class="pill-value">0</span>
         </div>
 
-        <!-- Seri (Streak) -->
         <div class="stat-pill streak-pill" title="Arka Arkaya Doğru Serisi">
           <span class="pill-icon fire-icon">🔥</span>
           <span id="current-streak" class="pill-value">0</span>
         </div>
 
-        <!-- Sonraki Ödül Hedefi -->
         <div class="reward-progress-box" title="Sonraki Ödül">
           <span class="reward-goal-icon" id="next-reward-icon">🌳</span>
           <div class="progress-track">
@@ -77,10 +73,10 @@
       </div>
     </header>
 
-    <!-- ===== ANA İÇERİK KAPSAYICI (PC'de 2 Sütun, Mobilde Akıcı Dikey) ===== -->
+    <!-- ===== ANA İÇERİK KAPSAYICI ===== -->
     <main class="game-body-layout">
 
-      <!-- SOL PANEL (PC'de Geniş Masal Bahçesi / Mobilde Üst Panorama) -->
+      <!-- SOL PANEL: 4 Yöne Doğru Genişletilmiş Canlı Manzara Sahnesi -->
       <aside class="scene-stage-column">
         <div class="scene-viewport" aria-label="Canlı masal dünyası">
           
@@ -90,7 +86,8 @@
             <span class="period-label" id="period-label">SABAH</span>
           </div>
 
-          <svg id="scene" viewBox="0 0 500 170" preserveAspectRatio="xMidYMid meet" role="img">
+          <!-- 4 YÖNE DOĞRU GENİŞLETİLMİŞ CANVAS: viewBox="-80 -120 660 420" -->
+          <svg id="scene" viewBox="-80 -120 660 420" preserveAspectRatio="xMidYMid slice" role="img">
             <defs>
               <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
                 <stop id="skyStop1" offset="0%" stop-color="var(--sky-1)" />
@@ -113,6 +110,11 @@
                 <stop offset="100%" stop-color="var(--hill-2)" />
               </linearGradient>
 
+              <linearGradient id="deepMeadowGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="var(--hill-2)" />
+                <stop offset="100%" stop-color="var(--pine-1)" />
+              </linearGradient>
+
               <linearGradient id="balloonGrad" x1="0" y1="0" x2="1" y2="0">
                 <stop offset="0%" stop-color="#FF5252" />
                 <stop offset="33%" stop-color="#FFD740" />
@@ -121,11 +123,19 @@
               </linearGradient>
             </defs>
 
-            <!-- 1. Sonsuz Gökyüzü (Dikeyde üstü tamamen doldurur) -->
-            <rect x="-100" y="-300" width="700" height="600" fill="url(#skyGrad)" />
+            <!-- 1. DÖRT YÖNE GENİŞLETİLMİŞ GÖKYÜZÜ (Üst ve yanları tam doldurur) -->
+            <rect x="-150" y="-200" width="800" height="400" fill="url(#skyGrad)" />
 
-            <!-- 2. Yıldızlar -->
+            <!-- 2. ÜST YILDIZLAR VE SAMANYOLU IŞILTILARI -->
             <g id="stars" class="scene-anim-stars" opacity="0">
+              <circle cx="20" cy="-60" r="1.8" fill="#FFFDE7" />
+              <circle cx="80" cy="-80" r="1.4" fill="#FFF" />
+              <polygon points="150,-70 152,-65 157,-64 153,-61 154,-56 150,-59 146,-56 147,-61 143,-64 148,-65" fill="#FFFDE7" />
+              <circle cx="240" cy="-90" r="2" fill="#FFF" />
+              <circle cx="330" cy="-75" r="1.5" fill="#FFFDE7" />
+              <polygon points="400,-85 402,-80 407,-79 403,-76 404,-71 400,-74 396,-71 397,-76 393,-79 398,-80" fill="#FFF9C4" />
+              <circle cx="480" cy="-60" r="1.6" fill="#FFF" />
+              <!-- Standart Yıldızlar -->
               <circle cx="35" cy="25" r="1.5" fill="#FFFDE7" />
               <circle cx="75" cy="40" r="1.2" fill="#FFF9C4" />
               <polygon points="120,20 122,24 126,25 123,28 124,32 120,29 116,32 117,28 114,25 118,24" fill="#FFFDE7" />
@@ -137,7 +147,7 @@
               <circle cx="470" cy="45" r="1.2" fill="#FFF9C4" />
             </g>
 
-            <!-- 3. Güneş -->
+            <!-- 3. GÜNEŞ (Genişletilmiş gökyüzünde ışıldar) -->
             <g id="sun" class="celestial-body interactive-element" transform="translate(90, 48)">
               <circle class="sun-glow" cx="0" cy="0" r="38" fill="url(#sunGlow)" />
               <circle class="sun-core" cx="0" cy="0" r="20" fill="#FFC107" />
@@ -150,7 +160,7 @@
               </g>
             </g>
 
-            <!-- 4. Hilal Ay -->
+            <!-- 4. HİLAL AY -->
             <g id="moon" class="celestial-body interactive-element" transform="translate(410, 42)" opacity="0">
               <circle cx="0" cy="0" r="18" fill="#FFF59D" />
               <circle cx="7" cy="-4" r="15" fill="var(--sky-1)" />
@@ -161,8 +171,14 @@
               </g>
             </g>
 
-            <!-- 5. Bulutlar -->
+            <!-- 5. YUMUŞAK BULUTLAR (Genişletilmiş alana da yayılır) -->
             <g id="clouds" class="interactive-element">
+              <!-- Üst Ekstra Bulut -->
+              <g class="cloud" transform="translate(260, -20)" opacity="0.8">
+                <ellipse cx="0" cy="0" rx="32" ry="12" fill="#FFFFFF" />
+                <ellipse cx="20" cy="-4" rx="22" ry="10" fill="#FFFFFF" />
+                <ellipse cx="-18" cy="2" rx="18" ry="9" fill="#FFFFFF" />
+              </g>
               <g class="cloud cloud-a" transform="translate(60, 60)">
                 <ellipse cx="0" cy="0" rx="26" ry="11" fill="#FFFFFF" opacity="0.95" />
                 <ellipse cx="16" cy="-3" rx="18" ry="9" fill="#FFFFFF" opacity="0.95" />
@@ -175,20 +191,27 @@
               </g>
             </g>
 
-            <!-- 6. Dağlar -->
-            <path d="M-20,170 L50,105 L130,135 L220,95 L310,130 L400,100 L490,135 L520,170 Z" fill="url(#mountainsGrad)" />
+            <!-- 6. YANLARA DOĞRU GENİŞLEYEN DAĞLAR (x: -100'den 600'e) -->
+            <path d="M-100,180 L-30,120 L50,105 L130,135 L220,95 L310,130 L400,100 L490,135 L560,110 L620,180 Z" fill="url(#mountainsGrad)" />
 
-            <!-- 7. Ön Dalgalı Yeşil Tepe & Alt Zemin (Dikeyde altı tamamen çimenle doldurur) -->
-            <rect x="-100" y="160" width="700" height="400" fill="url(#frontHillsGrad)" />
-            <path d="M-20,180 Q110,125 250,148 T520,150 L520,220 L-20,220 Z" fill="url(#frontHillsGrad)" />
+            <!-- ==============================================================
+                 7. ODAK ALANI ZEMİNİ & AŞAĞI DOĞRU SONSUZ UZAYAN ÇAYIR KATMANLARI
+                 ============================================================== -->
+            <!-- Orta Tepe Katmanı (Odak Noktasının Arkası) -->
+            <path d="M-100,200 Q110,115 250,138 T600,140 L600,350 L-100,350 Z" fill="url(#frontHillsGrad)" />
 
-            <!-- Çam Ağaçları -->
+            <!-- ==============================================================
+                 ANA ODAK ALANI: EV, AĞAÇLAR VE AÇILAN ÖDÜLLER (MERKEZDE SABİT)
+                 ============================================================== -->
+            
+            <!-- Sol Çam Ağaçları -->
             <g transform="translate(60, 115)">
               <polygon points="0,-24 -9,-8 9,-8" fill="var(--pine-1)" />
               <polygon points="0,-16 -12,0 12,0" fill="var(--pine-2)" />
               <polygon points="0,-8 -14,10 14,10" fill="var(--pine-3)" />
               <rect x="-2" y="10" width="4" height="8" fill="#5D4037" />
             </g>
+            <!-- Sağ Çam Ağaçları -->
             <g transform="translate(430, 120)">
               <polygon points="0,-20 -8,-6 8,-6" fill="var(--pine-1)" />
               <polygon points="0,-13 -10,2 10,2" fill="var(--pine-2)" />
@@ -196,7 +219,7 @@
               <rect x="-2" y="10" width="4" height="6" fill="#5D4037" />
             </g>
 
-            <!-- 8. İskandinav Masal Kulübesi -->
+            <!-- İSKANDİNAV MASAL KULÜBESİ (ANA ODAK MERKEZİ) -->
             <g id="house" class="interactive-element" transform="translate(250, 108)">
               <rect x="-38" y="32" width="76" height="12" rx="2" fill="#78909C" />
               <rect x="-34" y="2" width="68" height="32" rx="4" fill="var(--cottage-body)" stroke="#4527A0" stroke-width="1.5" />
@@ -230,7 +253,8 @@
               </g>
             </g>
 
-            <!-- 9. Açılabilir Ödüller -->
+            <!-- AÇILABİLİR KALICI ÖDÜLLER (ODAK ALANI İÇİNDE) -->
+            <!-- 5 Doğru: Meyveli Elma Ağacı -->
             <g id="reward-tree" class="reward-item" opacity="0" transform="translate(130, 130)">
               <rect x="-4" y="0" width="8" height="24" rx="2" fill="#6D4C41" />
               <circle cx="0" cy="-8" r="18" fill="#4CAF50" />
@@ -241,6 +265,7 @@
               <circle cx="-2" cy="4" r="2.8" fill="#E53935" />
             </g>
 
+            <!-- 15 Doğru: Sıcak Hava Balonu -->
             <g id="reward-balloon" class="reward-item" opacity="0" transform="translate(340, 55)">
               <ellipse cx="0" cy="-14" rx="14" ry="18" fill="url(#balloonGrad)" stroke="#FFF" stroke-width="1.2" />
               <line x1="-5" y1="4" x2="-3" y2="11" stroke="#795548" stroke-width="1" />
@@ -248,6 +273,7 @@
               <rect x="-5" y="11" width="10" height="7" rx="1.5" fill="#8D6E63" />
             </g>
 
+            <!-- 20 Doğru: Sevimli Köpek Kulübesi -->
             <g id="reward-doghouse" class="reward-item" opacity="0" transform="translate(365, 140)">
               <rect x="-14" y="-6" width="28" height="22" rx="2" fill="#D87A4F" stroke="#8D381B" stroke-width="1.2" />
               <polygon points="-18,-6 0,-18 18,-6" fill="#A84320" stroke="#66200A" stroke-width="1.2" />
@@ -260,11 +286,47 @@
               </g>
             </g>
 
+            <!-- ==============================================================
+                 8. AŞAĞI DOĞRU SONSUZ UZAYAN DERİN ÇAYIR VE ÇİÇEK DETAYLARI
+                 (PC Modunda alt kısım dikeyde uzadığında boş kalmaz, canlı çayır görünür)
+                 ============================================================== -->
+            <path d="M-100,165 Q130,175 300,160 T600,170 L600,450 L-100,450 Z" fill="url(#deepMeadowGrad)" />
+
+            <!-- Minik Sevimli Kır Çiçekleri (Genişletilmiş Alt Alanda) -->
+            <g transform="translate(100, 200)">
+              <circle cx="0" cy="0" r="3" fill="#FFF59D" />
+              <circle cx="-4" cy="0" r="2.5" fill="#FFFFFF" />
+              <circle cx="4" cy="0" r="2.5" fill="#FFFFFF" />
+              <circle cx="0" cy="-4" r="2.5" fill="#FFFFFF" />
+              <circle cx="0" cy="4" r="2.5" fill="#FFFFFF" />
+            </g>
+            <g transform="translate(220, 220)">
+              <circle cx="0" cy="0" r="3" fill="#FF8A80" />
+              <circle cx="-3.5" cy="0" r="2.2" fill="#FFCDD2" />
+              <circle cx="3.5" cy="0" r="2.2" fill="#FFCDD2" />
+              <circle cx="0" cy="-3.5" r="2.2" fill="#FFCDD2" />
+              <circle cx="0" cy="3.5" r="2.2" fill="#FFCDD2" />
+            </g>
+            <g transform="translate(380, 195)">
+              <circle cx="0" cy="0" r="3" fill="#FFF59D" />
+              <circle cx="-4" cy="0" r="2.5" fill="#FFFFFF" />
+              <circle cx="4" cy="0" r="2.5" fill="#FFFFFF" />
+              <circle cx="0" cy="-4" r="2.5" fill="#FFFFFF" />
+              <circle cx="0" cy="4" r="2.5" fill="#FFFFFF" />
+            </g>
+            <g transform="translate(450, 235)">
+              <circle cx="0" cy="0" r="2.5" fill="#80D8FF" />
+              <circle cx="-3" cy="0" r="2" fill="#E1F5FE" />
+              <circle cx="3" cy="0" r="2" fill="#E1F5FE" />
+              <circle cx="0" cy="-3" r="2" fill="#E1F5FE" />
+              <circle cx="0" cy="3" r="2.5" fill="#E1F5FE" />
+            </g>
+
           </svg>
         </div>
       </aside>
 
-      <!-- SAĞ PANEL (Saat ile Cevaplar Doğal Dikey Akışta) -->
+      <!-- SAĞ PANEL: Saat ve Cevaplar Alt Alta -->
       <section class="game-play-column">
 
         <!-- 3D Analog Saat -->
