@@ -114,8 +114,12 @@ const DOM = {
   body: document.body,
   confettiCanvas: document.getElementById('confetti-canvas'),
 
-  // Mod Butonları
-  modeTabBtns: document.querySelectorAll('.mode-tab-btn'),
+  // Mod Dropdown
+  modeDropdownTrigger: document.getElementById('mode-dropdown-trigger'),
+  modeDropdownMenu: document.getElementById('mode-dropdown-menu'),
+  activeModeIcon: document.getElementById('active-mode-icon'),
+  activeModeLabel: document.getElementById('active-mode-label'),
+  modeOptionBtns: document.querySelectorAll('.mode-option-btn'),
 
   // Saat Öğeleri
   clockWrapper: document.getElementById('clock-wrapper'),
@@ -886,13 +890,44 @@ function init() {
   loadProgress();
   setupMicroInteractions();
 
-  // Mod Değiştirme Butonları
-  DOM.modeTabBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      DOM.modeTabBtns.forEach(b => b.classList.remove('active'));
+  // Mod Dropdown Mantığı (Tıklayınca Açılır/Kapanır)
+  const modeData = {
+    'random': { icon: '🎲', label: 'Rastgele' },
+    'digital-to-analog': { icon: '🎯', label: 'Dijitalden Analoga' },
+    'analog-to-digital': { icon: '🎡', label: 'Analogdan Dijitale' },
+    'analog-to-speech': { icon: '💬', label: 'Konuşma Dili' },
+  };
+
+  DOM.modeDropdownTrigger.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const isOpen = DOM.modeDropdownMenu.style.display === 'flex';
+    DOM.modeDropdownMenu.style.display = isOpen ? 'none' : 'flex';
+    DOM.modeDropdownTrigger.classList.toggle('open', !isOpen);
+    audioEngine.playTick();
+  });
+
+  // Dışarı tıklayınca dropdown kapansın
+  window.addEventListener('click', () => {
+    DOM.modeDropdownMenu.style.display = 'none';
+    DOM.modeDropdownTrigger.classList.remove('open');
+  });
+
+  // Seçenek seçimi
+  DOM.modeOptionBtns.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const selectedMode = btn.dataset.mode;
+      state.activeGameMode = selectedMode;
+      state.sameTypeCount = 0;
+
+      // UI güncelle
+      DOM.modeOptionBtns.forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-      state.activeGameMode = btn.dataset.mode;
-      state.sameTypeCount = 0; // Mod değişince sayacı sıfırla
+      DOM.activeModeIcon.textContent = modeData[selectedMode].icon;
+      DOM.activeModeLabel.textContent = modeData[selectedMode].label;
+
+      DOM.modeDropdownMenu.style.display = 'none';
+      DOM.modeDropdownTrigger.classList.remove('open');
 
       audioEngine.playTick();
       const q = generateQuestion();

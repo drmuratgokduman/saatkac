@@ -213,6 +213,14 @@ body {
   padding-bottom: 6px;
   border-bottom: 1.5px dashed rgba(148, 163, 184, 0.35);
   gap: 8px;
+  position: relative;
+  z-index: 50;
+}
+
+.logo-and-mode {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .logo-badge {
@@ -237,6 +245,108 @@ body[data-time-period="night"] .app-title {
   background: linear-gradient(135deg, #60A5FA, #C084FC);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+
+/* ==========================================================================
+   DROPDOWN MOD SEÇİCİ (Header İçinde Şık Açılır Menü)
+   ========================================================================== */
+.mode-dropdown-container {
+  position: relative;
+}
+
+.mode-dropdown-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--badge-bg);
+  backdrop-filter: blur(8px);
+  border: 1.5px solid var(--card-border);
+  border-radius: 999px;
+  padding: 3px 10px;
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-main);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.mode-dropdown-btn:hover {
+  background: rgba(255, 255, 255, 0.85);
+  transform: translateY(-1px);
+}
+
+.dropdown-chevron {
+  font-size: 0.75rem;
+  color: var(--text-sub);
+  transition: transform 0.2s ease;
+}
+
+.mode-dropdown-btn.open .dropdown-chevron {
+  transform: rotate(180deg);
+}
+
+.mode-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  min-width: 175px;
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1.5px solid var(--card-border);
+  border-radius: 14px;
+  box-shadow: 0 12px 30px -4px rgba(0, 0, 0, 0.22);
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  z-index: 100;
+  animation: dropdownFade 0.2s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+body[data-time-period="night"] .mode-dropdown-menu {
+  background: rgba(15, 23, 42, 0.9);
+  border-color: rgba(99, 102, 241, 0.4);
+}
+
+@keyframes dropdownFade {
+  0% { opacity: 0; transform: translateY(-6px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.mode-option-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 6px 10px;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-main);
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.mode-option-btn:hover {
+  background: rgba(59, 130, 246, 0.12);
+  color: #2563EB;
+}
+
+.mode-option-btn.active {
+  background: #3B82F6;
+  color: #FFFFFF;
+}
+
+body[data-time-period="night"] .mode-option-btn.active {
+  background: #6366F1;
+  color: #FFFFFF;
 }
 
 /* Rozetler */
@@ -409,56 +519,6 @@ body[data-time-period="night"] .progress-text { color: #6EE7B7; }
     flex: 1;
     gap: 12px;
   }
-}
-
-/* Mod Menüsü */
-.game-mode-nav {
-  display: flex;
-  gap: 4px;
-  background: rgba(255, 255, 255, 0.45);
-  backdrop-filter: blur(8px);
-  border: 1.5px solid var(--card-border);
-  border-radius: 12px;
-  padding: 3px;
-  flex-shrink: 0;
-  overflow-x: auto;
-  scrollbar-width: none;
-}
-.game-mode-nav::-webkit-scrollbar { display: none; }
-
-body[data-time-period="night"] .game-mode-nav {
-  background: rgba(30, 41, 59, 0.55);
-}
-
-.mode-tab-btn {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  min-height: 30px;
-  padding: 4px 8px;
-  background: transparent;
-  border: none;
-  border-radius: 8px;
-  font-family: inherit;
-  font-size: 0.74rem;
-  font-weight: 700;
-  color: var(--text-sub);
-  cursor: pointer;
-  white-space: nowrap;
-  transition: all 0.2s ease;
-}
-
-.mode-tab-btn:hover {
-  background: rgba(255, 255, 255, 0.5);
-  color: var(--text-main);
-}
-
-.mode-tab-btn.active {
-  background: #3B82F6;
-  color: #FFFFFF;
-  box-shadow: 0 2px 6px rgba(59, 130, 246, 0.4);
 }
 
 /* 3D Analog Saat */

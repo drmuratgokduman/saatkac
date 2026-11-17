@@ -17,12 +17,39 @@
 
   <div id="app" class="game-wrapper" data-time-period="morning">
 
-    <!-- ===== 1. ÜST PANEL: Logo, Puan ve İlerleme ===== -->
+    <!-- ===== 1. ÜST PANEL: Logo, Dropdown Mod Seçici, Puan ve İlerleme ===== -->
     <header class="game-header">
-      <div class="logo-badge">
-        <span class="logo-icon">⏰</span>
-        <div class="logo-text">
+      <div class="logo-and-mode">
+        <div class="logo-badge">
+          <span class="logo-icon">⏰</span>
           <span class="app-title">ZAMAN KAŞİFİ</span>
+        </div>
+
+        <!-- DROPDOWN MOD SEÇİCİ (EN ÜSTTE LOGO YANINDA GİZLİ) -->
+        <div class="mode-dropdown-container">
+          <button id="mode-dropdown-trigger" class="mode-dropdown-btn" type="button" aria-expanded="false" title="Oyun Modunu Değiştir">
+            <span id="active-mode-icon">🎲</span>
+            <span id="active-mode-label">Rastgele</span>
+            <span class="dropdown-chevron">▾</span>
+          </button>
+          <div id="mode-dropdown-menu" class="mode-dropdown-menu" style="display:none">
+            <button class="mode-option-btn active" data-mode="random" type="button">
+              <span class="opt-icon">🎲</span>
+              <span class="opt-label">Rastgele</span>
+            </button>
+            <button class="mode-option-btn" data-mode="digital-to-analog" type="button">
+              <span class="opt-icon">🎯</span>
+              <span class="opt-label">Dijitalden Analoga</span>
+            </button>
+            <button class="mode-option-btn" data-mode="analog-to-digital" type="button">
+              <span class="opt-icon">🎡</span>
+              <span class="opt-label">Analogdan Dijitale</span>
+            </button>
+            <button class="mode-option-btn" data-mode="analog-to-speech" type="button">
+              <span class="opt-icon">💬</span>
+              <span class="opt-label">Konuşma Dili</span>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -238,26 +265,6 @@
 
       <!-- SAĞ PANEL (Saat ile Cevaplar Doğal Dikey Akışta) -->
       <section class="game-play-column">
-
-        <!-- Oyun Modları Seçim Menüsü -->
-        <nav class="game-mode-nav" aria-label="Oyun Modları">
-          <button class="mode-tab-btn active" data-mode="random" type="button">
-            <span class="tab-icon">🎲</span>
-            <span class="tab-label">Rastgele</span>
-          </button>
-          <button class="mode-tab-btn" data-mode="digital-to-analog" type="button">
-            <span class="tab-icon">🎯</span>
-            <span class="tab-label">Dijitalden Analoga</span>
-          </button>
-          <button class="mode-tab-btn" data-mode="analog-to-digital" type="button">
-            <span class="tab-icon">🎡</span>
-            <span class="tab-label">Analogdan Dijitale</span>
-          </button>
-          <button class="mode-tab-btn" data-mode="analog-to-speech" type="button">
-            <span class="tab-icon">💬</span>
-            <span class="tab-label">Konuşma Dili</span>
-          </button>
-        </nav>
 
         <!-- 3D Analog Saat -->
         <div class="clock-stage-container">
