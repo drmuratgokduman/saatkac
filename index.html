@@ -56,7 +56,13 @@
 
         <!-- DİNAMİK CANLI SVG SAHNE -->
         <div class="scene-viewport" aria-label="Canlı masal dünyası">
-          <svg id="scene" viewBox="0 0 500 240" preserveAspectRatio="xMidYMid slice" role="img">
+          <!-- VAKİT ROZETİ (SABAH / ÖĞLE / AKŞAM / GECE) -->
+          <div class="time-period-badge" id="time-period-indicator">
+            <span class="period-icon" id="period-icon">☀️</span>
+            <span class="period-label" id="period-label">SABAH</span>
+          </div>
+
+          <svg id="scene" viewBox="0 0 500 240" preserveAspectRatio="xMidYMid meet" role="img">
             <defs>
               <!-- Gökyüzü Renk Geçişleri -->
               <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
@@ -148,13 +154,13 @@
             </g>
 
             <!-- Arka Tepeler -->
-            <path d="M-20,240 Q100,140 240,190 T520,180 L520,240 Z" fill="url(#hillBackGrad)" />
+            <path d="M-20,240 Q100,120 240,165 T520,150 L520,240 Z" fill="url(#hillBackGrad)" />
 
             <!-- Ön Tepe ve Çayır -->
-            <path d="M-20,240 Q120,170 300,205 T520,210 L520,240 Z" fill="url(#hillFrontGrad)" />
+            <path d="M-20,240 Q120,140 300,175 T520,180 L520,240 Z" fill="url(#hillFrontGrad)" />
 
-            <!-- Sevimli Masal Evi -->
-            <g id="house" class="interactive-element" transform="translate(240, 150)">
+            <!-- Sevimli Masal Evi (Kompakt ve tam görünür) -->
+            <g id="house" class="interactive-element" transform="translate(240, 130)">
               <!-- Baca -->
               <rect x="22" y="-38" width="16" height="26" rx="3" fill="#8D6E63" />
               <rect x="19" y="-42" width="22" height="6" rx="2" fill="#6D4C41" />

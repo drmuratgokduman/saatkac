@@ -45,6 +45,8 @@ const DOM = {
 
   // Sahne Öğeleri
   scene: document.getElementById('scene'),
+  periodIcon: document.getElementById('period-icon'),
+  periodLabel: document.getElementById('period-label'),
   sun: document.getElementById('sun'),
   moon: document.getElementById('moon'),
   stars: document.getElementById('stars'),
@@ -181,6 +183,18 @@ function updateScene(hour) {
   // TÜM SAYFA (BODY & APP) ATMOSFERE BÜRÜNÜR
   DOM.body.setAttribute('data-time-period', period);
   DOM.app.setAttribute('data-time-period', period);
+
+  // VAKİT ROZETİ (Görsel kafa karıştırmasın diye açık metin)
+  const periodData = {
+    morning: { icon: '☀️', label: 'SABAH' },
+    noon: { icon: '🌤️', label: 'ÖĞLE' },
+    evening: { icon: '🌅', label: 'AKŞAM' },
+    night: { icon: '🌙', label: 'GECE' }
+  };
+  if (DOM.periodIcon && DOM.periodLabel) {
+    DOM.periodIcon.textContent = periodData[period].icon;
+    DOM.periodLabel.textContent = periodData[period].label;
+  }
 
   if (period === 'night') {
     DOM.sun.setAttribute('opacity', '0');
